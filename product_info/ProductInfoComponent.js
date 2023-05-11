@@ -1,9 +1,9 @@
 import { View, Text } from "react-native"
 
-function ProductInfo () {
+function ProductInfo ({navigation, route}) {
     return (
     <View>
-        <Text>Hello, This is the Product Information screen</Text>
+        <Text>Hello, This is the {route.params.name} screen</Text>
     </View>
     )
 }
