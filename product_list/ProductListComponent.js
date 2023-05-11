@@ -6,10 +6,6 @@ import ProductListItem from "./ProductListItem";
 
 function ProductList({ navigation }) {
 
-    function toInfo() {
-        navigation.navigate("ProductInfo", { name: "Lorem Ipsum Dorem" })
-    }
-
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({})
     const [products, setProducts] = useState([])
@@ -40,8 +36,8 @@ function ProductList({ navigation }) {
             <View style={styles.spacerHorizontal} ></View>
             <Text style={styles.titleText}>Product List</Text>
             {loading ? (<Text>Loading...</Text>) : (<>
-                <FlatList data={products} renderItem={(itemData) => {
-                    return <ProductListItem data={itemData.item} />
+                <FlatList style={{ marginBottom: 12 }} data={products} renderItem={(itemData) => {
+                    return <ProductListItem navigator={navigation} data={itemData.item} />
                 }} keyExtractor={(item, index) => item.id} alwaysBounceVertical={false} />
             </>
             )
