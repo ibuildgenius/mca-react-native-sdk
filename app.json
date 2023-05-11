@@ -4,6 +4,7 @@
     "slug": "mca-react-sdk",
     "version": "1.0.0",
     "orientation": "portrait",
+    "backgroundColor": "#F2F4F7",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {

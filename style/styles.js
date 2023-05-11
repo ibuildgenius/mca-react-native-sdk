@@ -20,6 +20,17 @@ export const styles = StyleSheet.create({
     },
 
     listItem: {
-        flexDirection: "row"
+        paddingVertical: 12,
+        paddingHorizontal: 8,
+        flexDirection: "row",
+        margin: 4,
+        paddingHorizontal: 8,
+        backgroundColor: "#ffffff",
+        borderRadius: 3,
+    },
+
+    listImage: {
+        width: 32,
+        height: 32
     }
 })
