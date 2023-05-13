@@ -30,7 +30,17 @@ export const styles = StyleSheet.create({
     },
 
     listImage: {
-        width: 32,
-        height: 32
+        width: 38,
+        height: 38
+    },
+
+    logo: {
+        margin: 12,
+        width: 150,
+        height: 30
+    },
+
+    poweredBy: {
+        margin: 12,
     }
 })

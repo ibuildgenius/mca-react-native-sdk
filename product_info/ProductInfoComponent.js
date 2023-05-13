@@ -1,11 +1,21 @@
 import { View, Text } from "react-native"
 
-function ProductInfo ({navigation, route}) {
+import { styles } from "../style/styles"
+import MCALayout from "../components/MCALayout"
+
+function ProductInfo({ navigation, route }) {
+
+    let productData = route.params.productData
+
     return (
-    <View>
-        <Text>Hello, This is the {route.params.name} screen</Text>
-    </View>
+        <View style={styles.appContainer}>
+            <View style={styles.spacerHorizontal}></View>
+            <MCALayout>
+                <Text>Hello, This is the {productData["name"]} screen</Text>
+            </MCALayout>
+        </View>
     )
 }
 
 export default ProductInfo
+

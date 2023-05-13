@@ -33,7 +33,7 @@ export default function ProductListItem(props) {
                     <Image style={styles.listImage} source={resolveImage()} />
 
                 </View>
-                <View style={{ flex: 5 }}>
+                <View style={{ flex: 5, marginHorizontal: 8 }}>
                     <Text style={{ marginBottom: 8 }}>{data["name"]}</Text>
                     <Text>{data["prefix"]}</Text>
                 </View>
