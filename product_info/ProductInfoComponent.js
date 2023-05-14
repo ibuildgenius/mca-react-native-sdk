@@ -1,4 +1,4 @@
-import { View, Text, useWindowDimensions } from "react-native"
+import { View, Text, useWindowDimensions, Button } from "react-native"
 
 import { styles } from "../style/styles"
 import MCALayout from "../components/MCALayout"
@@ -7,6 +7,7 @@ import HowItWorks from "./HowItWorks"
 import Benefits from "./Benefits"
 import HowToClaim from "./HowToClaim"
 import { useState } from "react"
+import { colorPrimary } from "../style/colors"
 
 function ProductInfo({ navigation, route }) {
 
@@ -51,6 +52,11 @@ function ProductInfo({ navigation, route }) {
         />
     );
 
+
+    function nextScreen() {
+        navigation.navigate("ProductForm", { data: productData })
+    }
+
     return (
 
         <MCALayout>
@@ -62,6 +68,7 @@ function ProductInfo({ navigation, route }) {
                 initialLayout={{ width: layout.width }}
                 renderTabBar={renderTabBar}
             />
+            <Button title="Continue" color={colorPrimary} onPress={nextScreen} />
         </MCALayout>
     )
 }

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View } from 'react-native';
 import ProductList from './product_list/ProductListComponent';
 import ProductInfo from './product_info/ProductInfoComponent';
+import ProductForm from './product_forms/ProductForms';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -17,7 +18,10 @@ export default function App() {
         <Stack.Screen
           name='ProductInfo'
           component={ProductInfo}
-
+        />
+        <Stack.Screen
+          name='ProductForm'
+          component={ProductForm}
         />
       </Stack.Navigator>
     </NavigationContainer>
