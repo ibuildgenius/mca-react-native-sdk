@@ -42,5 +42,19 @@ export const styles = StyleSheet.create({
 
     poweredBy: {
         margin: 12,
+    },
+
+    htmlContainer: {
+        alignItems: "center",
+        width: "100%"
+    },
+    infoImagesStyle: {
+        margin: 12,
+        width: 70,
+        height: 70
+    },
+    htmlContent: {
+        paddingHorizontal: 10,
+        paddingBottom: 16
     }
 })
