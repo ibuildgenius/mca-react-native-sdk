@@ -3,15 +3,24 @@ import MCALayout from "../components/MCALayout";
 import { colorPrimary } from "../style/colors";
 import { styles } from "../style/styles";
 import { useState } from "react";
-import MCATextField, { MDatePicker } from "../components/MCATextField";
+import { MCATextField } from "../components/MCATextField";
+import { MDatePicker } from "../components/MDatePicker"
 
 export default function ProductForm({ navigation, route }) {
 
     let productData = route.params.data
 
+    const [formData, setFormData] = useState(new Map())
+
     let formFields = productData["form_fields"].filter((item) => item["show_first"]).sort((a, b) => a.position - b.position)
 
     let [fieldIndex, setFieldIndex] = useState(0)
+
+    function updateData(key, value) {
+        let newMap = formData
+        newMap.set(key, value)
+        setFormData(newMap)
+    }
 
     function getImage(name) {
         let newName = name.toLowerCase();
@@ -36,18 +45,14 @@ export default function ProductForm({ navigation, route }) {
 
     function progressOrNavigate() {
 
-        console.log("chucked size " + chunkedFields().length)
+        console.log("Form fields " + [...formData.keys()])
 
         if (fieldIndex < (chunkedFields().length - 1)) {
-            console.log("incrementing")
             setFieldIndex(fieldIndex + 1)
-            console.log("field index " + fieldIndex)
         } else {
-            console.log("navigating")
-            navigation.navigate("PaymentOptionScreen", { data: productData })
+            navigation.navigate("PaymentOptionScreen", { data: productData, form: formData })
         }
     }
-
 
     function chunkedFields() {
         let chunkSize = 3;
@@ -67,8 +72,6 @@ export default function ProductForm({ navigation, route }) {
         return chunk
     }
 
-
-
     return (
         <MCALayout>
             <View style={{ alignItems: "center" }}>
@@ -82,18 +85,19 @@ export default function ProductForm({ navigation, route }) {
             </View>
             <View style={{ flex: 1 }}>
                 {resolveFields().map((element) => {
-
-                    console.log(element)
-
                     let fieldType = element["input_type"]
+
+                    function onDataChange(value) {
+                        updateData(element["name"], value)
+                    }
 
                     switch (fieldType) {
                         case "file":
-                            return <Text>File</Text>
+                            return <Text key={element["label"]}>File</Text>
                         case "date":
-                            return <MDatePicker editable={false} data={element} />
+                            return <MDatePicker dateValueChanged={onDataChange} keyValue={element["label"]} editable={false} data={element} />
                         default:
-                            return <MCATextField editable={true} data={element} />
+                            return <MCATextField onDataChange={onDataChange} valueString={formData[element["name"]]} keyValue={element["label"]} editable={true} data={element} />
                     }
                 })}
             </View>
