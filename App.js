@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import ProductList from './product_list/ProductListComponent';
 import ProductInfo from './product_info/ProductInfoComponent';
 import ProductForm from './product_forms/ProductForms';
+import PaymentOption from './payment_option/PaymentOption';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -22,6 +23,10 @@ export default function App() {
         <Stack.Screen
           name='ProductForm'
           component={ProductForm}
+        />
+        <Stack.Screen
+          name='PaymentOptionScreen'
+          component={PaymentOption}
         />
       </Stack.Navigator>
     </NavigationContainer>
