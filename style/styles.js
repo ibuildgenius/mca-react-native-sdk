@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
 
     htmlContainer: {
         alignItems: "center",
-        width: "100%"
+        width: "99%"
     },
     infoImagesStyle: {
         margin: 12,

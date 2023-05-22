@@ -23,7 +23,11 @@ function ProductList({ navigation }) {
     useEffect(() => {
         fetch(url, { method: "POST", headers: headers, body: jsonBody })
             .then((response) => response.json())
-            .then((json) => { setData(json); setProducts(json["data"]["productDetails"]); })
+            .then((json) => {
+                global.instanceId = json["data"]["businessDetails"]["instance_id"];
+                setData(json);
+                setProducts(json["data"]["productDetails"]);
+            })
             .catch((error) => console.log(error))
             .finally(() => setLoading(false))
     }, []);

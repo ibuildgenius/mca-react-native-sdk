@@ -10,7 +10,7 @@ export default function ProductForm({ navigation, route }) {
 
     let productData = route.params.data
 
-    const [formData, setFormData] = useState(new Map())
+    const [formData, setFormData] = useState({})
 
     let formFields = productData["form_fields"].filter((item) => item["show_first"]).sort((a, b) => a.position - b.position)
 
@@ -18,7 +18,7 @@ export default function ProductForm({ navigation, route }) {
 
     function updateData(key, value) {
         let newMap = formData
-        newMap.set(key, value)
+        newMap[key] = value
         setFormData(newMap)
     }
 
@@ -45,12 +45,12 @@ export default function ProductForm({ navigation, route }) {
 
     function progressOrNavigate() {
 
-        console.log("Form fields " + [...formData.keys()])
+        console.log("Form fields " + formData)
 
         if (fieldIndex < (chunkedFields().length - 1)) {
             setFieldIndex(fieldIndex + 1)
         } else {
-            navigation.navigate("PaymentOptionScreen", { data: productData, form: formData })
+            navigation.navigate("PaymentOptionScreen", { data: { product: productData, form: formData } })
         }
     }
 

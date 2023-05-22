@@ -61,6 +61,7 @@ function ProductInfo({ navigation, route }) {
 
         <MCALayout>
             <TabView
+                style={{ flex: 1 }}
                 swipeEnabled={false}
                 navigationState={{ index, routes }}
                 renderScene={renderScene}

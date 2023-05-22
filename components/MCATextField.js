@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { TextInput, View, Text, Pressable } from "react-native";
+import { SelectField } from "./SelectField";
 
 export function MCATextField(props) {
     let data = props.data
 
     function onChange(textString) {
         props.onDataChange(textString)
+    }
+
+
+    if (data["form_field"].name.toLowerCase() === "select") {
+        return <SelectField data={data} />
     }
 
     return (
