@@ -5,16 +5,20 @@ import { styles } from "../style/styles";
 import { useState } from "react";
 import { MCATextField } from "../components/MCATextField";
 import { MDatePicker } from "../components/MDatePicker"
+import FilePicker from "../components/FilePicker";
+import { BASE_URL, TOKEN } from "../api/constants";
 
 export default function ProductForm({ navigation, route }) {
 
     let productData = route.params.data
+    let transactionRef = route.params.transactionRef
+    let existingFormData = route.params.formData
 
     const [formData, setFormData] = useState({})
+    const [fieldIndex, setFieldIndex] = useState(0)
+    const [files, setFiles] = useState([])
 
-    let formFields = productData["form_fields"].filter((item) => item["show_first"]).sort((a, b) => a.position - b.position)
-
-    let [fieldIndex, setFieldIndex] = useState(0)
+    let formFields = productData["form_fields"].filter((item) => { return (!transactionRef) ? item["show_first"] : !item["show_first"] }).sort((a, b) => a.position - b.position)
 
     function updateData(key, value) {
         let newMap = formData
@@ -44,13 +48,16 @@ export default function ProductForm({ navigation, route }) {
     }
 
     function progressOrNavigate() {
-
-        console.log("Form fields " + formData)
-
         if (fieldIndex < (chunkedFields().length - 1)) {
             setFieldIndex(fieldIndex + 1)
         } else {
-            navigation.navigate("PaymentOptionScreen", { data: { product: productData, form: formData } })
+            if (!transactionRef) {
+                setFieldIndex[0]
+                navigation.navigate("PaymentOptionScreen", { data: { product: productData, form: formData } })
+            } else {
+                completePurchase()
+            }
+
         }
     }
 
@@ -72,6 +79,53 @@ export default function ProductForm({ navigation, route }) {
         return chunk
     }
 
+
+    async function uploadFiles() {
+        for (let i = 0; i < files.length; i++) {
+            const formData = new FormData()
+
+            formData.append("name", "file");
+            formData.append("file_attachment", files[i].fileUri)
+
+            let headers = {
+                "Authorization": "Bearer " + TOKEN,
+                "Accept": "application/json",
+                "Content-Type": "multipart/form-data"
+            }
+
+
+            let url = BASE_URL + "/v1/upload-file"
+
+            let response = await fetch(url, {
+                method: "POST",
+                headers: headers
+            })
+
+            let json = await response.json()
+
+
+            console.log(json)
+
+            if (json["responseCode"] == 1) {
+
+            }
+
+        }
+    }
+
+    function completePurchase() {
+
+    }
+
+
+    function onFilePicked(key, file) {
+        let pair = { key: key, fileUri: file.uri }
+        console.log(key)
+        setFiles(currentFiles => [...currentFiles, pair])
+    }
+
+
+
     return (
         <MCALayout>
             <View style={{ alignItems: "center" }}>
@@ -86,14 +140,24 @@ export default function ProductForm({ navigation, route }) {
             <View style={{ flex: 1 }}>
                 {resolveFields().map((element) => {
                     let fieldType = element["input_type"]
+                    let dataType = element["data_type"].toLowerCase();
 
                     function onDataChange(value) {
-                        updateData(element["name"], value)
+                        if (dataType == "number") {
+                            updateData(element["name"], parseInt(value))
+                        }
+                        else if (dataType == "boolean") {
+                            updateData(element["name"], (value.toLowerCase() == "true"))
+                        } else {
+                            updateData(element["name"], value)
+                        }
                     }
+
+                    return <FilePicker onFilePicked={onFilePicked} data={element} />
 
                     switch (fieldType) {
                         case "file":
-                            return <Text key={element["label"]}>File</Text>
+                            return <FilePicker onFilePicked={onFilePicked} data={element} />
                         case "date":
                             return <MDatePicker dateValueChanged={onDataChange} keyValue={element["label"]} editable={false} data={element} />
                         default:
@@ -101,7 +165,7 @@ export default function ProductForm({ navigation, route }) {
                     }
                 })}
             </View>
-            <Button onPress={progressOrNavigate} color={colorPrimary} title="Continue" />
+            <Button onPress={uploadFiles} color={colorPrimary} title="Continue" />
         </MCALayout>
     );
 }

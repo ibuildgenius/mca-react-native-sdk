@@ -11,7 +11,7 @@ export function MCATextField(props) {
 
 
     if (data["form_field"].name.toLowerCase() === "select") {
-        return <SelectField data={data} />
+        return <SelectField onChangeData={onChange} data={data} />
     }
 
     return (

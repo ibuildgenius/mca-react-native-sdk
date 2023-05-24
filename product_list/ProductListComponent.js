@@ -1,7 +1,7 @@
 import { View, Text, Button, FlatList } from "react-native"
 import { styles } from "../style/styles"
 import { useState, useEffect } from "react"
-import { BASE_URL, initiatePurchase } from "../api/constants";
+import { BASE_URL, TOKEN, initiatePurchase } from "../api/constants";
 import ProductListItem from "./ProductListItem";
 
 function ProductList({ navigation }) {
@@ -12,9 +12,7 @@ function ProductList({ navigation }) {
 
     const url = BASE_URL + initiatePurchase
 
-    const token = "MCAPUBK_TEST|84afcf91-1804-470b-be22-5ea194d9f083"
-
-    const headers = { "Authorization": "Bearer " + token, "Content-Type": "application/json" }
+    const headers = { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" }
     const jsonBody = JSON.stringify({
         action: "purchase",
         payment_option: "gateway"
