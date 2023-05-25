@@ -9,7 +9,7 @@ export default function PaymentOption({ navigation, route }) {
     let [loading, setLoading] = useState(false)
     let [buttonText, setButtonText] = useState("Get Covered")
     let [paymentDetails, setPaymentDetails] = useState({})
-    let [paymentResponse, setPaymentResponse] = useState({})
+    //let [paymentResponse, setPaymentResponse] = useState({})
 
     const [paymentString, setPaymentString] = useState("bank transfer")
 
@@ -65,7 +65,7 @@ export default function PaymentOption({ navigation, route }) {
             .then((json) => {
                 console.log(json)
                 if (json["responseCode"] == 1) {
-                    setPaymentResponse(json["data"])
+                    //setPaymentResponse(json["data"])
                     navigation.navigate("ProductForm", { data: product, formData: formData, transactionRef: json["data"]["reference"] })
                 }
             })

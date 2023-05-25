@@ -5,7 +5,7 @@ import { BASE_URL, TOKEN } from "../api/constants";
 
 export function SelectField(props) {
 
-    const [options, setOptions] = useState(["Select"])
+    const [options, setOptions] = useState(["Select an Option"])
 
     const [selectValue, setSelectedValue] = useState(options[0])
 

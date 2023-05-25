@@ -11,14 +11,14 @@ import { BASE_URL, TOKEN } from "../api/constants";
 export default function ProductForm({ navigation, route }) {
 
     let productData = route.params.data
-    let transactionRef = route.params.transactionRef
-    let existingFormData = route.params.formData
+    let transactionRef = route.params.transactionRef || ""
+    //let existingFormData = route.params.formData
 
     const [formData, setFormData] = useState({})
     const [fieldIndex, setFieldIndex] = useState(0)
     const [files, setFiles] = useState([])
 
-    let formFields = productData["form_fields"].filter((item) => { return (!transactionRef) ? item["show_first"] : !item["show_first"] }).sort((a, b) => a.position - b.position)
+    let formFields = productData["form_fields"].filter((item) => { return (transactionRef.trim().length < 1) ? item["show_first"] : !item["show_first"] }).sort((a, b) => a.position - b.position)
 
     function updateData(key, value) {
         let newMap = formData
@@ -52,7 +52,7 @@ export default function ProductForm({ navigation, route }) {
             setFieldIndex(fieldIndex + 1)
         } else {
             if (!transactionRef) {
-                setFieldIndex[0]
+                setFieldIndex(0)
                 navigation.navigate("PaymentOptionScreen", { data: { product: productData, form: formData } })
             } else {
                 completePurchase()
@@ -125,17 +125,25 @@ export default function ProductForm({ navigation, route }) {
     function completePurchase() {
         uploadFiles().then(() => {
 
+            updateData("is_full_year", true)
+
             let url = BASE_URL + "/v1/sdk/complete-purchase"
 
             let headers = { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" }
 
-            let body = JSON.stringify()
+            let body = JSON.stringify({
+                payload: formData,
+                reference: transactionRef
+            })
+
+            console.log(formData)
 
             fetch(url, { method: "POST", headers: headers, body })
-                .then((response) => { response.json() })
+                .then((response) => response.json())
                 .then((json) => {
+                    console.log(json)
                     if (json["responseCode"] == 1) {
-                        navigation.navigate("SuccessScreen", { name: productData["name"] })
+                        navigation.reset("SuccessScreen", { name: productData["name"] })
                     } else {
                         Alert.alert("Request Failed", json["responseText"])
                     }
@@ -189,7 +197,7 @@ export default function ProductForm({ navigation, route }) {
                     }
                 })}
             </View>
-            <Button onPress={uploadFiles} color={colorPrimary} title="Continue" />
+            <Button onPress={progressOrNavigate} color={colorPrimary} title="Continue" />
         </MCALayout>
     );
 }
