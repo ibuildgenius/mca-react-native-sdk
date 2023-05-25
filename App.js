@@ -5,6 +5,7 @@ import ProductList from './product_list/ProductListComponent';
 import ProductInfo from './product_info/ProductInfoComponent';
 import ProductForm from './product_forms/ProductForms';
 import PaymentOption from './payment_option/PaymentOption';
+import SuccessScreen from './components/SuccessScreen';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -27,6 +28,10 @@ export default function App() {
         <Stack.Screen
           name='PaymentOptionScreen'
           component={PaymentOption}
+        />
+        <Stack.Screen
+          name='SuccessScreen'
+          component={SuccessScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

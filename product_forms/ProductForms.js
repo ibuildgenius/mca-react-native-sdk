@@ -1,4 +1,4 @@
-import { Text, View, Image, Button } from "react-native";
+import { Text, View, Image, Button, Alert } from "react-native";
 import MCALayout from "../components/MCALayout";
 import { colorPrimary } from "../style/colors";
 import { styles } from "../style/styles";
@@ -82,10 +82,12 @@ export default function ProductForm({ navigation, route }) {
 
     async function uploadFiles() {
         for (let i = 0; i < files.length; i++) {
+
+            console.log(files[i].fileUri)
+
             const formData = new FormData()
 
-            formData.append("name", "file");
-            formData.append("file_attachment", files[i].fileUri)
+            formData.append("file", { uri: files[i].fileUri, type: "image/png", name: "image_" + i })
 
             let headers = {
                 "Authorization": "Bearer " + TOKEN,
@@ -93,28 +95,52 @@ export default function ProductForm({ navigation, route }) {
                 "Content-Type": "multipart/form-data"
             }
 
-
             let url = BASE_URL + "/v1/upload-file"
 
-            let response = await fetch(url, {
-                method: "POST",
-                headers: headers
-            })
+            try {
+                let response = await fetch(url, {
+                    method: "POST",
+                    headers: headers,
+                    body: formData
+                })
 
-            let json = await response.json()
+                let json = await response.json()
 
+                console.log(json)
 
-            console.log(json)
+                if (json["responseCode"] == 1) {
+                    updateData(files[i].key, json["data"]["file_url"])
+                }
 
-            if (json["responseCode"] == 1) {
-
+            } catch (error) {
+                console.log(error)
             }
+
+
+
 
         }
     }
 
     function completePurchase() {
+        uploadFiles().then(() => {
 
+            let url = BASE_URL + "/v1/sdk/complete-purchase"
+
+            let headers = { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" }
+
+            let body = JSON.stringify()
+
+            fetch(url, { method: "POST", headers: headers, body })
+                .then((response) => { response.json() })
+                .then((json) => {
+                    if (json["responseCode"] == 1) {
+                        navigation.navigate("SuccessScreen", { name: productData["name"] })
+                    } else {
+                        Alert.alert("Request Failed", json["responseText"])
+                    }
+                })
+        })
     }
 
 
@@ -152,8 +178,6 @@ export default function ProductForm({ navigation, route }) {
                             updateData(element["name"], value)
                         }
                     }
-
-                    return <FilePicker onFilePicked={onFilePicked} data={element} />
 
                     switch (fieldType) {
                         case "file":
