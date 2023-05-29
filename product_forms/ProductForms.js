@@ -48,6 +48,9 @@ export default function ProductForm({ navigation, route }) {
     }
 
     function progressOrNavigate() {
+
+        console.log(formData)
+
         if (fieldIndex < (chunkedFields().length - 1)) {
             setFieldIndex(fieldIndex + 1)
         } else {
@@ -115,10 +118,6 @@ export default function ProductForm({ navigation, route }) {
             } catch (error) {
                 console.log(error)
             }
-
-
-
-
         }
     }
 
@@ -159,9 +158,14 @@ export default function ProductForm({ navigation, route }) {
     }
 
 
+    function onBackPressed() {
+        if (fieldIndex > 0) {
+            setFieldIndex(fieldIndex - 1)
+        }
+    }
 
     return (
-        <MCALayout>
+        <MCALayout onBackPressed={onBackPressed}>
             <View style={{ alignItems: "center" }}>
                 <Text style={{ fontSize: 16, fontWeight: 400, padding: 12 }} >{productData["name"]}</Text>
                 <Text style={{ padding: 5, backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
@@ -181,7 +185,8 @@ export default function ProductForm({ navigation, route }) {
                             updateData(element["name"], parseInt(value))
                         }
                         else if (dataType == "boolean") {
-                            updateData(element["name"], (value.toLowerCase() == "true"))
+                            console.log(value)
+                            updateData(element["name"], (value.toLowerCase() == "true") ? true : false)
                         } else {
                             updateData(element["name"], value)
                         }

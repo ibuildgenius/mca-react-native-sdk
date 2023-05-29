@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     },
 
     spacerHorizontal: {
-        height: "5%"
+        height: "2%"
     },
 
     titleText: {
