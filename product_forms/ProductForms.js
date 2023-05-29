@@ -7,6 +7,7 @@ import { MCATextField } from "../components/MCATextField";
 import { MDatePicker } from "../components/MDatePicker"
 import FilePicker from "../components/FilePicker";
 import { BASE_URL, TOKEN } from "../api/constants";
+import ItemPair from "../components/ItemPair";
 
 export default function ProductForm({ navigation, route }) {
 
@@ -160,7 +161,9 @@ export default function ProductForm({ navigation, route }) {
                     let dataType = element["data_type"].toLowerCase();
 
                     function onDataChange(value) {
-                        if (dataType == "number") {
+                        if (dataType == "array") {
+                            updateData(element["name"], value)
+                        } else if (dataType == "number") {
                             updateData(element["name"], parseInt(value))
                         }
                         else if (dataType == "boolean") {
@@ -169,6 +172,11 @@ export default function ProductForm({ navigation, route }) {
                         } else {
                             updateData(element["name"], value)
                         }
+                    }
+
+
+                    if (dataType == "array") {
+                        return <ItemPair onUpdate={onDataChange} data={element} />
                     }
 
                     switch (fieldType) {
