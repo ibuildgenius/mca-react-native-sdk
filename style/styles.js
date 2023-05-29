@@ -8,15 +8,16 @@ export const styles = StyleSheet.create({
     },
 
     spacerHorizontal: {
-        height: "2%"
+        height: "3%"
     },
 
     titleText: {
         margin: 4,
-        fontSize: 20,
+        fontSize: 18,
+        fontWeight: "500",
         width: "100%",
-        fontWeight: "600",
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: "MetropolisBold"
     },
 
     listItem: {

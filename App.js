@@ -6,9 +6,22 @@ import ProductInfo from './product_info/ProductInfoComponent';
 import ProductForm from './product_forms/ProductForms';
 import PaymentOption from './payment_option/PaymentOption';
 import SuccessScreen from './components/SuccessScreen';
+import { useFonts } from "expo-font"
 
 export default function App() {
+
+  const [loaded] = useFonts({
+    MetropolisRegular: require("./assets/fonts/metropolis_regular.otf"),
+    MetropolisMedium: require("./assets/fonts/metropolis_medium.otf"),
+    MetropolisBold: require("./assets/fonts/metropolis_bold.otf")
+  })
+
+
   const Stack = createNativeStackNavigator();
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <NavigationContainer>

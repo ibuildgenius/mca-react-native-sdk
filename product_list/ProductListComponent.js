@@ -56,16 +56,24 @@ function ProductList({ navigation }) {
     return (
         <View style={styles.appContainer}>
             <View style={styles.spacerHorizontal} ></View>
-            <Text style={styles.titleText}>Product List</Text>
-            {loading ? (<Text>Loading...</Text>) : (<View style={{ flex: 1, justifyContent: "flex-start" }}>
-                {ProductFilterOptions(filters, filterOption, (option) => {
-                    setFilterOption(option)
-                })}
-                <FlatList showsVerticalScrollIndicator={false} style={{ paddingBottom: 10 }} contentContainerStyle={{ justifyContent: "flex-start" }} data={getProductList()} renderItem={(itemData) => {
-                    return <ProductListItem navigator={navigation} data={itemData.item} />
-                }} keyExtractor={(item, index) => item.id} alwaysBounceVertical={false} />
-            </View>
-            )
+            {loading ?
+                (
+                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%" }}>
+                        <Text style={{ fontFamily: "MetropolisMedium" }}>Fetching Products...</Text>
+                    </View>
+                ) : (
+                    <View style={{ flex: 1, justifyContent: "flex-start" }}>
+                        <Text style={styles.titleText}>Products</Text>
+
+                        {ProductFilterOptions(filters, filterOption, (option) => {
+                            setFilterOption(option)
+                        })}
+                        <FlatList showsVerticalScrollIndicator={false} style={{ paddingBottom: 10 }} contentContainerStyle={{ justifyContent: "flex-start" }} data={getProductList()} renderItem={(itemData) => {
+                            return <ProductListItem navigator={navigation} data={itemData.item} />
+                        }} keyExtractor={(item, index) => item.id} alwaysBounceVertical={false} />
+                    </View>
+
+                )
             }
 
         </View>
@@ -83,7 +91,7 @@ function ProductFilterOptions(options, filterOption, onItemPressed) {
             paddingVertical: 5,
             paddingHorizontal: 7,
             borderRadius: 30,
-            borderWidth: 1.5,
+            borderWidth: 0.8,
             borderColor: "#3BAA90",
             justifyContent: "center"
         },
@@ -101,12 +109,18 @@ function ProductFilterOptions(options, filterOption, onItemPressed) {
 
         inactiveText: {
             textAlign: "center",
-            color: "#3BAA90"
+            color: "#3BAA90",
+            fontFamily: "MetropolisRegular",
+            fontSize: 14,
+            fontWeight: "400"
         },
 
         activeText: {
             textAlign: "center",
-            color: "white"
+            color: "white",
+            fontFamily: "MetropolisRegular",
+            fontSize: 14,
+            fontWeight: "400"
         }
 
 

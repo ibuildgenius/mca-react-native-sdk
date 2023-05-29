@@ -1,5 +1,6 @@
 import { View, Text, Pressable, Image } from "react-native"
 import { styles } from "../style/styles";
+import { getImage } from "../product_forms/ProductForms";
 
 export default function ProductListItem(props) {
     const data = props.data
@@ -25,6 +26,10 @@ export default function ProductListItem(props) {
     }
 
 
+    function getIcon() {
+        return getImage(data["prefix"], false)
+    }
+
     let price = parseFloat(data["price"])
     return (
         <Pressable onPress={navigate} style={({ pressed }) => pressed && { opacity: 0.7 }}>
@@ -34,11 +39,18 @@ export default function ProductListItem(props) {
 
                 </View>
                 <View style={{ flex: 5, marginHorizontal: 8 }}>
-                    <Text style={{ marginBottom: 8 }}>{data["name"]}</Text>
-                    <Text>{data["prefix"]}</Text>
+
+                    <Text style={{ marginBottom: 8, color: "#344054", fontFamily: "MetropolisMedium", fontWeight: "600" }}>{data["name"]}</Text>
+
+                    <View style={{ flexDirection: "row", marginTop: 2, alignItems: "center" }}>
+                        <Text style={{ fontFamily: "MetropolisRegular", color: "#667085", marginRight: 5 }} >{data["prefix"]}</Text>
+                        {getIcon()}
+                    </View>
+
+
                 </View>
                 <View style={{ flex: 2, flexDirection: "row-reverse", alignItems: "center" }}>
-                    {(price > 1000) ? (<Text>N {price}</Text>) : (<Text>% {price}</Text>)}
+                    {(price > 1000) ? (<Text style={{ fontFamily: "MetropolisRegular", fontSize: 12 }}>N {price}</Text>) : (<Text>% {price}</Text>)}
 
                 </View>
             </View>

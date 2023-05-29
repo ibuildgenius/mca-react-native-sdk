@@ -26,27 +26,6 @@ export default function ProductForm({ navigation, route }) {
         setFormData(newMap)
     }
 
-    function getImage(name) {
-        let newName = name.toLowerCase();
-
-        let style = { marginHorizontal: 5 }
-
-        if (newName.includes("mcg") || newName.includes("mycovergenius")) {
-            return <Image style={style} source={require("../assets/mcg.png")} />
-        } else if (newName.includes("aiico")) {
-            return <Image style={style} source={require("../assets/aiico.png")} />
-        } else if (newName.includes("sti")) {
-            return <Image style={style} source={require("../assets/sti.png")} />
-        } else if (newName.includes("flexicare")) {
-            return <Image style={style} source={require("../assets/flexicare.png")} />
-        } else if (newName.includes("leadway")) {
-            return <Image style={style} source={require("../assets/leadway.png")} />
-        }
-        else {
-            return <Text style={style} >{name.toUpperCase()}</Text>
-        }
-    }
-
     function progressOrNavigate() {
 
         console.log(formData)
@@ -205,4 +184,30 @@ export default function ProductForm({ navigation, route }) {
             <Button onPress={progressOrNavigate} color={colorPrimary} title="Continue" />
         </MCALayout>
     );
+}
+
+
+
+export function getImage(name, showText = true) {
+    let newName = name.toLowerCase();
+
+    let style = { marginHorizontal: 5 }
+
+    if (newName.includes("mcg") || newName.includes("mycovergenius")) {
+        return <Image style={style} source={require("../assets/mcg.png")} />
+    } else if (newName.includes("aiico")) {
+        return <Image style={style} source={require("../assets/aiico.png")} />
+    } else if (newName.includes("sti")) {
+        return <Image style={style} source={require("../assets/sti.png")} />
+    } else if (newName.includes("flexicare")) {
+        return <Image style={style} source={require("../assets/flexicare.png")} />
+    } else if (newName.includes("leadway")) {
+        return <Image style={style} source={require("../assets/leadway.png")} />
+    }
+    else {
+        if (showText === true)
+            return <Text style={style} >{name.toUpperCase()}</Text>
+        else
+            return null
+    }
 }
