@@ -79,7 +79,7 @@ export default function PaymentOption({ navigation, route }) {
             return (
                 <View style={{ flex: 1, marginVertical: 8, backgroundColor: "#F9FAFB" }}>
                     <View style={{ flex: 5, alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ marginVertical: 12, color: "green" }}>{bankDetails["message"]}</Text>
+                        <Text style={{ fontFamily: "MetropolisRegular", marginVertical: 12, color: "green" }}>{bankDetails["message"]}</Text>
                         <View
                             style={{
                                 width: "80%",
@@ -88,7 +88,7 @@ export default function PaymentOption({ navigation, route }) {
                                 borderBottomWidth: StyleSheet.hairlineWidth,
                             }}
                         />
-                        <Text style={{ textAlign: "center", fontSize: 25, fontWeight: "600", marginVertical: 12 }}>{bankDetails["bank"] + "\n" + bankDetails["account_number"]}</Text>
+                        <Text style={{ fontFamily: "MetropolisBold", textAlign: "center", fontSize: 25, fontWeight: "600", marginVertical: 12 }}>{bankDetails["bank"] + "\n" + bankDetails["account_number"]}</Text>
                         <View
                             style={{
                                 width: "80%",
@@ -105,8 +105,8 @@ export default function PaymentOption({ navigation, route }) {
 
         return (
             <View style={{ flex: 1 }}>
-                <Text style={{ marginTop: 18, fontSize: 18, fontWeight: "600" }}>Select Payment Method</Text>
-                <Text style={{ color: "#667085", marginTop: 5, marginBottom: 15, fontSize: 14, }} >Choose an option to proceed</Text>
+                <Text style={{ marginTop: 18, fontSize: 18, fontFamily: "MetropolisBold" }}>Select Payment Method</Text>
+                <Text style={{ color: "#667085", marginTop: 5, marginBottom: 15, fontSize: 14, fontFamily: "MetropolisRegular" }} >Choose an option to proceed</Text>
 
                 <PaymentOptionCard imagePath={require("../assets/transfer.png")} selected={paymentString == "bank transfer"} title="Transfer" sub="Send to bank account" />
                 <View style={{ opacity: 0.2 }}>
@@ -138,8 +138,8 @@ export default function PaymentOption({ navigation, route }) {
             <View style={{ flex: 1, flexDirection: "column" }}>
                 <View style={{ flex: 1 }}>
                     <View style={style.bio}>
-                        <Text style={{ fontSize: 16, color: "#98A2B3" }}>{hasSubmitted ? formData["email"] : product["name"]}</Text>
-                        <Text style={{ color: "#98A2B3" }}>{hasSubmitted ? "N" + paymentDetails["data"]["amount"] : formData["email"]}</Text>
+                        <Text style={{ fontSize: 16, fontFamily: "MetropolisMedium", }}>{hasSubmitted ? formData["email"] : product["name"]}</Text>
+                        <Text style={{ fontFamily: "MetropolisRegular", color: "#98A2B3" }}>{hasSubmitted ? "N" + paymentDetails["data"]["amount"] : formData["email"]}</Text>
                     </View>
                     {renderLayout()}
                 </View>
@@ -188,8 +188,8 @@ export function PaymentOptionCard(props) {
         <View style={selected ? style.cardSelected : style.card}>
             <Image source={props.imagePath} />
             <View style={{ marginHorizontal: 12 }}>
-                <Text style={{ fontWeight: "600", fontSize: 15 }} >{props.title}</Text>
-                <Text style={{ marginTop: 5, fontSize: 12, }}>{props.sub}</Text>
+                <Text style={{ fontWeight: "600", fontFamily: "MetropolisMedium", fontSize: 15 }} >{props.title}</Text>
+                <Text style={{ marginTop: 5, fontSize: 12, fontFamily: "MetropolisRegular" }}>{props.sub}</Text>
             </View>
         </View>
     );

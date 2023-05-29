@@ -146,11 +146,11 @@ export default function ProductForm({ navigation, route }) {
     return (
         <MCALayout onBackPressed={onBackPressed}>
             <View style={{ alignItems: "center" }}>
-                <Text style={{ fontSize: 16, fontWeight: 400, padding: 12 }} >{productData["name"]}</Text>
-                <Text style={{ padding: 5, backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
+                <Text style={{ fontSize: 16, fontWeight: "600", padding: 12, fontFamily: "MetropolisMedium" }} >{productData["name"]}</Text>
+                <Text style={{ padding: 5, width: "100%", fontFamily: "MetropolisRegular", backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
                 <View style={{ flexDirection: "row", marginVertical: 12, alignItems: "center" }}>
                     <View style={{ flex: 1 }} ></View>
-                    <Text>Underwritten By: </Text>
+                    <Text style={{ fontFamily: "MetropolisRegular" }}>Underwritten By: </Text>
                     {getImage(productData["prefix"])}
                 </View>
             </View>

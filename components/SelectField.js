@@ -42,14 +42,16 @@ export function SelectField(props) {
 
     return (
         <View>
-            <Text style={{ marginVertical: 5 }}>{data["label"]}</Text>
+            <Text style={{ marginVertical: 5, fontFamily: "MetropolisRegular" }}>{data["label"]}</Text>
             <View style={{ backgroundColor: "#EAECF0", borderRadius: 5 }}>
                 <Picker
+                    itemStyle={{ fontSize: 20, fontFamily: "MetropolisRegular" }}
+                    mode="dropdown"
                     selectedValue={selectValue}
                     onValueChange={onValueChanged}>
                     {
                         options.map((item) => {
-                            return <Picker.Item label={item} value={item} />
+                            return <Picker.Item fontFamily="MetropolisRegular" label={item.charAt(0).toLocaleUpperCase() + item.substring(1)} value={item} />
                         })
                     }
                 </Picker>

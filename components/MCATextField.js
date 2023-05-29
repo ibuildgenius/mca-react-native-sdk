@@ -16,9 +16,9 @@ export function MCATextField(props) {
 
     return (
         <View key={props.key} style={{ width: "100%", marginVertical: 6 }}>
-            <Text style={{ marginVertical: 6 }}>{data["label"]}</Text>
+            <Text style={{ marginVertical: 6, fontFamily: "MetropolisRegular" }}>{data["label"]}</Text>
             <View style={{ backgroundColor: "#EAECF0", borderRadius: 5 }}>
-                <TextInput onChangeText={onChange} value={props.valueString} editable={props.editable} style={{ padding: 6 }} placeholder={data["description"]} />
+                <TextInput onChangeText={onChange} value={props.valueString} editable={props.editable} style={{ padding: 6, fontFamily: "MetropolisRegular" }} placeholder={data["description"]} />
             </View>
         </View>
     );

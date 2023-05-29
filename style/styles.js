@@ -47,6 +47,7 @@ export const styles = StyleSheet.create({
 
     htmlContainer: {
         alignItems: "center",
+        flex: 1,
         width: "99%"
     },
     infoImagesStyle: {
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
         height: 70
     },
     htmlContent: {
+        flex: 1,
         paddingHorizontal: 10,
-        paddingBottom: 16
     }
 })

@@ -13,7 +13,7 @@ export default function Benefits(props) {
         <View style={styles.htmlContainer}>
             <Image style={styles.infoImagesStyle} source={require("../assets/benefits.png")} />
 
-            <ScrollView contentInsetAdjustmentBehavior="automatic">
+            <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentInsetAdjustmentBehavior="always">
                 <View style={styles.htmlContent}>
                     <RenderHTML contentWidth={width} source={{ html: data["key_benefits"] }} />
                 </View>

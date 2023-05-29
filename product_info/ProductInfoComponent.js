@@ -47,7 +47,7 @@ function ProductInfo({ navigation, route }) {
             indicatorStyle={{ backgroundColor: '#F2F4F7' }}
             activeColor="#3BAA90"
             inactiveColor="#364657"
-            labelStyle={{ textTransform: "none" }}
+            labelStyle={{ textTransform: "none", fontFamily: "MetropolisMedium", fontWeight: "600" }}
             style={{ backgroundColor: '#F2F4F7', elevation: 0 }}
         />
     );
