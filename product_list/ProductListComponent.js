@@ -1,4 +1,4 @@
-import { View, Text, Button, FlatList, StyleSheet, Pressable } from "react-native"
+import { View, Text, Button, FlatList, StyleSheet, Pressable, ActivityIndicator } from "react-native"
 import { styles } from "../style/styles"
 import { useState, useEffect } from "react"
 import { BASE_URL, TOKEN, initiatePurchase } from "../api/constants";
@@ -59,6 +59,7 @@ function ProductList({ navigation }) {
             {loading ?
                 (
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%" }}>
+                        <ActivityIndicator style={{ margin: 12, color: "#3BAA90" }} animating={loading} />
                         <Text style={{ fontFamily: "MetropolisMedium" }}>Fetching Products...</Text>
                     </View>
                 ) : (

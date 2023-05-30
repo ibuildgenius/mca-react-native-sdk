@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Button, Alert } from "react-native";
+import { View, Text, StyleSheet, Image, Button, Alert, ImageBackground, Modal } from "react-native";
 import MCALayout from "../components/MCALayout";
 import { useEffect, useState } from "react";
 import { BASE_URL, TOKEN, instanceId } from "../api/constants";
@@ -67,8 +67,12 @@ export default function PaymentOption({ navigation, route }) {
                 if (json["responseCode"] == 1) {
                     //setPaymentResponse(json["data"])
                     navigation.navigate("ProductForm", { data: product, formData: formData, transactionRef: json["data"]["reference"] })
+                } else {
+                    Alert.alert("Unable to Verify", json["responseText"])
                 }
             })
+            .catch((error) => { })
+            .finally(() => setLoading(false))
     }
 
 
@@ -136,6 +140,17 @@ export default function PaymentOption({ navigation, route }) {
     return (
         <MCALayout>
             <View style={{ flex: 1, flexDirection: "column" }}>
+                <ImageBackground
+                    blurRadius={4}
+                    source={require("../assets/logo.png")}
+                >
+                    <Modal visible={true} animationType="fade">
+                        <View>
+                            <Text>Please Wait</Text>
+                        </View>
+
+                    </Modal>
+                </ImageBackground>
                 <View style={{ flex: 1 }}>
                     <View style={style.bio}>
                         <Text style={{ fontSize: 16, fontFamily: "MetropolisMedium", }}>{hasSubmitted ? formData["email"] : product["name"]}</Text>
@@ -143,8 +158,8 @@ export default function PaymentOption({ navigation, route }) {
                     </View>
                     {renderLayout()}
                 </View>
-
                 <Button title={buttonText} onPress={handleButtonBehavior} color="#3BAA90" />
+
             </View>
 
         </MCALayout>

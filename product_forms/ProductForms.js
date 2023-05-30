@@ -122,7 +122,7 @@ export default function ProductForm({ navigation, route }) {
                 .then((json) => {
                     console.log(json)
                     if (json["responseCode"] == 1) {
-                        navigation.reset("SuccessScreen", { name: productData["name"] })
+                        navigation.navigate("SuccessScreen", { name: productData["name"] })
                     } else {
                         Alert.alert("Request Failed", json["responseText"])
                     }
