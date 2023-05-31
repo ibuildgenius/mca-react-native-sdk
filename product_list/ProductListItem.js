@@ -50,7 +50,7 @@ export default function ProductListItem(props) {
 
                 </View>
                 <View style={{ flex: 2, flexDirection: "row-reverse", alignItems: "center" }}>
-                    {(price > 1000) ? (<Text style={{ fontFamily: "MetropolisRegular", fontSize: 12 }}>N {price}</Text>) : (<Text>% {price}</Text>)}
+                    {(data["is_dynamic_pricing"]) ? (<Text style={{ fontFamily: "MetropolisRegular", fontSize: 12 }}>% {price}</Text>) : (<Text>N {price}</Text>)}
 
                 </View>
             </View>

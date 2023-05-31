@@ -3,7 +3,6 @@ import { styles } from "../style/styles"
 import { useState, useEffect } from "react"
 import { BASE_URL, TOKEN, initiatePurchase } from "../api/constants";
 import ProductListItem from "./ProductListItem";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 function ProductList({ navigation }) {
 
@@ -20,6 +19,8 @@ function ProductList({ navigation }) {
         payment_option: "gateway"
     })
 
+
+
     useEffect(() => {
         fetch(url, { method: "POST", headers: headers, body: jsonBody })
             .then((response) => response.json())
@@ -35,12 +36,14 @@ function ProductList({ navigation }) {
 
 
     function getProductList() {
+        var p = products
+
         if (filterOption.toLowerCase() != "all") {
-            return products.filter((item) =>
+            p = products.filter((item) =>
                 item["prefix"] == filterOption
             )
         }
-        return products
+        return p.sort((a, b) => { return a.name.localeCompare(b.name) })
     }
 
     function updateFilters(p) {
@@ -50,6 +53,7 @@ function ProductList({ navigation }) {
                 x.add(item["prefix"])
             }
         )
+
         setFilters([...x])
     }
 

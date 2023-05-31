@@ -1,22 +1,24 @@
-import { Button, View } from "react-native";
+import { Button, View, Text } from "react-native";
 import MCALayout from "./MCALayout";
+import { colorPrimary } from "../style/colors";
+import AnimatedLottieView from "lottie-react-native";
 
-export default function SuccessScreen({ navigator, route }) {
-    var data = route.params.data
+export default function SuccessScreen(props) {
+    var message = props.message || "Lorem Ipsum"
 
     function onDone() {
-        navigator.navigate("ProductList")
+        props.onDonePressed()
     }
 
     return (
         <MCALayout>
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ fontFamily: "MetropolisBold", fontSize: 18 }}>
-                    Your purchase for {data["name"]} was successful
-                </Text>
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 
-                <Button title="Done" onPress={onDone} />
+                <Text style={{ fontFamily: "MetropolisMedium", fontSize: 18, textAlign: "center" }}>
+                    {message}
+                </Text>
             </View>
+            <Button title="Done" color={colorPrimary} onPress={onDone} />
         </MCALayout>
     );
 }

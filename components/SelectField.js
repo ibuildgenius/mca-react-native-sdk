@@ -6,6 +6,7 @@ import { BASE_URL, TOKEN } from "../api/constants";
 export function SelectField(props) {
 
     const [options, setOptions] = useState(["Select an Option"])
+    const [hasFetchedData, setHasFetchedData] = useState(false)
 
     const [selectValue, setSelectedValue] = useState(options[0])
 
@@ -18,7 +19,13 @@ export function SelectField(props) {
 
 
     function fetchSelectFields() {
+
+        //  if (!hasFetchedData) {
+
         const url = BASE_URL + "/v1" + data["data_url"]
+
+        console.log(url)
+
 
         const headers = { "Authorization": "Bearer " + TOKEN }
 
@@ -32,13 +39,17 @@ export function SelectField(props) {
                         } else {
                             setOptions(json.data.map((element) => element.toString()))
                         }
+                        setHasFetchedData(true)
                     }
                 })
                 .catch((error) => console.log(error))
-        });
+        }, []);
+        //  }
     }
 
+
     fetchSelectFields()
+
 
     return (
         <View>

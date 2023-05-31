@@ -52,7 +52,7 @@ export default function ItemPair(props) {
     return (
         <View>
             <Pressable onPress={disPlayModal}>
-                <MCATextField editable={false} data={data} />
+                <MCATextField editable={false} data={data} valueString={(entries.length > 0) ? " " + entries.length + " item(s)" : ""} />
             </Pressable>
             <Modal visible={showModal}>
                 <View style={styles.appContainer}>

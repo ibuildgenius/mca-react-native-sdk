@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image, Button, Alert, ImageBackground, Modal } 
 import MCALayout from "../components/MCALayout";
 import { useEffect, useState } from "react";
 import { BASE_URL, TOKEN, instanceId } from "../api/constants";
+import SuccessScreen from "../components/SuccessScreen";
 
 export default function PaymentOption({ navigation, route }) {
     let product = route.params.data.product
@@ -9,7 +10,8 @@ export default function PaymentOption({ navigation, route }) {
     let [loading, setLoading] = useState(false)
     let [buttonText, setButtonText] = useState("Get Covered")
     let [paymentDetails, setPaymentDetails] = useState({})
-    //let [paymentResponse, setPaymentResponse] = useState({})
+    let [paymentResponse, setPaymentResponse] = useState({})
+    let [paymentVerified, setPaymentVerified] = useState(false)
 
     const [paymentString, setPaymentString] = useState("bank transfer")
 
@@ -65,14 +67,20 @@ export default function PaymentOption({ navigation, route }) {
             .then((json) => {
                 console.log(json)
                 if (json["responseCode"] == 1) {
-                    //setPaymentResponse(json["data"])
-                    navigation.navigate("ProductForm", { data: product, formData: formData, transactionRef: json["data"]["reference"] })
+                    setPaymentResponse(json["data"])
+                    setPaymentVerified(true)
+
                 } else {
                     Alert.alert("Unable to Verify", json["responseText"])
                 }
             })
-            .catch((error) => { })
+            .catch((error) => { console.log(error) })
             .finally(() => setLoading(false))
+    }
+
+
+    function navigateToNext() {
+        navigation.navigate("ProductForm", { data: product, formData: formData, transactionRef: paymentResponse["reference"] })
     }
 
 
@@ -137,10 +145,18 @@ export default function PaymentOption({ navigation, route }) {
     // }
 
 
+    if (paymentVerified) {
+        return (
+            <SuccessScreen message={"Payment Verified,\nplease fill out the remaining fields"} onDonePressed={navigateToNext} />
+
+        )
+    }
     return (
-        <MCALayout>
-            <View style={{ flex: 1, flexDirection: "column" }}>
-                <ImageBackground
+        <View style={{ flex: 1 }}>
+
+            <MCALayout>
+                <View style={{ flex: 1, flexDirection: "column" }}>
+                    {/* <ImageBackground
                     blurRadius={4}
                     source={require("../assets/logo.png")}
                 >
@@ -150,19 +166,25 @@ export default function PaymentOption({ navigation, route }) {
                         </View>
 
                     </Modal>
-                </ImageBackground>
-                <View style={{ flex: 1 }}>
-                    <View style={style.bio}>
-                        <Text style={{ fontSize: 16, fontFamily: "MetropolisMedium", }}>{hasSubmitted ? formData["email"] : product["name"]}</Text>
-                        <Text style={{ fontFamily: "MetropolisRegular", color: "#98A2B3" }}>{hasSubmitted ? "N" + paymentDetails["data"]["amount"] : formData["email"]}</Text>
+                </ImageBackground> */}
+                    <View style={{ flex: 1 }}>
+                        <View style={style.bio}>
+                            <Text style={{ fontSize: 16, fontFamily: "MetropolisMedium", }}>{hasSubmitted ? formData["email"] : product["name"]}</Text>
+                            <Text style={{ fontFamily: "MetropolisRegular", color: "#98A2B3" }}>{hasSubmitted ? "N" + paymentDetails["data"]["amount"] : formData["email"]}</Text>
+                        </View>
+                        {renderLayout()}
                     </View>
-                    {renderLayout()}
+                    <Button title={buttonText} onPress={handleButtonBehavior} color="#3BAA90" />
+
                 </View>
-                <Button title={buttonText} onPress={handleButtonBehavior} color="#3BAA90" />
 
-            </View>
+            </MCALayout>
 
-        </MCALayout>
+            {/* <View style={{ zIndex: 2, flex: 1, height: "100%", width: "100%", marginTop: "6%", position: "absolute", justifyContent: "center", backgroundColor: "red" }}>
+                <Text>Hello</Text>
+            </View> */}
+
+        </View>
     );
 }
 

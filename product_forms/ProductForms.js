@@ -8,6 +8,7 @@ import { MDatePicker } from "../components/MDatePicker"
 import FilePicker from "../components/FilePicker";
 import { BASE_URL, TOKEN } from "../api/constants";
 import ItemPair from "../components/ItemPair";
+import SuccessScreen from "../components/SuccessScreen";
 
 export default function ProductForm({ navigation, route }) {
 
@@ -18,6 +19,7 @@ export default function ProductForm({ navigation, route }) {
     const [formData, setFormData] = useState({})
     const [fieldIndex, setFieldIndex] = useState(0)
     const [files, setFiles] = useState([])
+    const [complete, setComplete] = useState(false)
 
     let formFields = productData["form_fields"].filter((item) => { return (transactionRef.trim().length < 1) ? item["show_first"] : !item["show_first"] }).sort((a, b) => a.position - b.position)
 
@@ -70,7 +72,7 @@ export default function ProductForm({ navigation, route }) {
 
             const formData = new FormData()
 
-            formData.append("file", { uri: files[i].fileUri, type: "image/png", name: "image_" + i })
+            formData.append("file", { uri: files[i].fileDetail.uri, type: "image/png", name: files[i].fileDetail.name })
 
             let headers = {
                 "Authorization": "Bearer " + TOKEN,
@@ -122,7 +124,7 @@ export default function ProductForm({ navigation, route }) {
                 .then((json) => {
                     console.log(json)
                     if (json["responseCode"] == 1) {
-                        navigation.navigate("SuccessScreen", { name: productData["name"] })
+                        setComplete(true)
                     } else {
                         Alert.alert("Request Failed", json["responseText"])
                     }
@@ -132,7 +134,7 @@ export default function ProductForm({ navigation, route }) {
 
 
     function onFilePicked(key, file) {
-        let pair = { key: key, fileUri: file.uri }
+        let pair = { key: key, fileDetail: { uri: file.uri, name: file.name } }
         console.log(key)
         setFiles(currentFiles => [...currentFiles, pair])
     }
@@ -144,54 +146,66 @@ export default function ProductForm({ navigation, route }) {
         }
     }
 
-    return (
-        <MCALayout onBackPressed={onBackPressed}>
-            <View style={{ alignItems: "center" }}>
-                <Text style={{ fontSize: 16, fontWeight: "600", padding: 12, fontFamily: "MetropolisMedium" }} >{productData["name"]}</Text>
-                <Text style={{ padding: 5, width: "100%", fontFamily: "MetropolisRegular", backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
-                <View style={{ flexDirection: "row", marginVertical: 12, alignItems: "center" }}>
-                    <View style={{ flex: 1 }} ></View>
-                    <Text style={{ fontFamily: "MetropolisRegular" }}>Underwritten By: </Text>
-                    {getImage(productData["prefix"])}
+    function onDone() {
+        navigation.navigate("ProductList")
+    }
+
+    if (complete)
+
+        return (
+            <SuccessScreen message={"Your purchase for " + productData["name"] + " was successful."} onDonePressed={onDone} />
+        )
+
+    else
+        return (
+
+            <MCALayout onBackPressed={onBackPressed}>
+                <View style={{ alignItems: "center" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "600", padding: 12, fontFamily: "MetropolisMedium" }} >{productData["name"]}</Text>
+                    <Text style={{ padding: 5, width: "100%", fontFamily: "MetropolisRegular", backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
+                    <View style={{ flexDirection: "row", marginVertical: 12, alignItems: "center" }}>
+                        <View style={{ flex: 1 }} ></View>
+                        <Text style={{ fontFamily: "MetropolisRegular" }}>Underwritten By: </Text>
+                        {getImage(productData["prefix"])}
+                    </View>
                 </View>
-            </View>
-            <View style={{ flex: 1 }}>
-                {resolveFields().map((element) => {
-                    let fieldType = element["input_type"]
-                    let dataType = element["data_type"].toLowerCase();
+                <View style={{ flex: 1 }}>
+                    {resolveFields().map((element) => {
+                        let fieldType = element["input_type"]
+                        let dataType = element["data_type"].toLowerCase();
 
-                    function onDataChange(value) {
+                        function onDataChange(value) {
+                            if (dataType == "array") {
+                                updateData(element["name"], value)
+                            } else if (dataType == "number") {
+                                updateData(element["name"], parseInt(value))
+                            }
+                            else if (dataType == "boolean") {
+                                console.log(value)
+                                updateData(element["name"], (value.toLowerCase() == "true") ? true : false)
+                            } else {
+                                updateData(element["name"], value)
+                            }
+                        }
+
+
                         if (dataType == "array") {
-                            updateData(element["name"], value)
-                        } else if (dataType == "number") {
-                            updateData(element["name"], parseInt(value))
+                            return <ItemPair onUpdate={onDataChange} data={element} />
                         }
-                        else if (dataType == "boolean") {
-                            console.log(value)
-                            updateData(element["name"], (value.toLowerCase() == "true") ? true : false)
-                        } else {
-                            updateData(element["name"], value)
+
+                        switch (fieldType) {
+                            case "file":
+                                return <FilePicker onFilePicked={onFilePicked} data={element} />
+                            case "date":
+                                return <MDatePicker dateValueChanged={onDataChange} keyValue={element["label"]} editable={false} data={element} />
+                            default:
+                                return <MCATextField onDataChange={onDataChange} valueString={formData[element["name"]]} keyValue={element["label"]} editable={true} data={element} />
                         }
-                    }
-
-
-                    if (dataType == "array") {
-                        return <ItemPair onUpdate={onDataChange} data={element} />
-                    }
-
-                    switch (fieldType) {
-                        case "file":
-                            return <FilePicker onFilePicked={onFilePicked} data={element} />
-                        case "date":
-                            return <MDatePicker dateValueChanged={onDataChange} keyValue={element["label"]} editable={false} data={element} />
-                        default:
-                            return <MCATextField onDataChange={onDataChange} valueString={formData[element["name"]]} keyValue={element["label"]} editable={true} data={element} />
-                    }
-                })}
-            </View>
-            <Button onPress={progressOrNavigate} color={colorPrimary} title="Continue" />
-        </MCALayout>
-    );
+                    })}
+                </View>
+                <Button onPress={progressOrNavigate} color={colorPrimary} title="Continue" />
+            </MCALayout>
+        );
 }
 
 
