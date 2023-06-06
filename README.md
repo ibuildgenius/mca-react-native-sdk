@@ -1,1 +1,1 @@
-## MCA React Navite SDK
+## MCA React Native SDK
