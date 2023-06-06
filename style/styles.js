@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 8,
         flexDirection: "row",
+        alignItems: "flex-start",
         margin: 4,
         paddingHorizontal: 8,
         backgroundColor: "#ffffff",

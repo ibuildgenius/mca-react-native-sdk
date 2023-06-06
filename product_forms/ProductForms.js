@@ -1,6 +1,6 @@
-import { Text, View, Image, Button, Alert } from "react-native";
+import { Text, View, Image, Button, Alert, ActivityIndicator } from "react-native";
 import MCALayout from "../components/MCALayout";
-import { colorPrimary } from "../style/colors";
+import { colorGreyOverlay, colorPrimary } from "../style/colors";
 import { styles } from "../style/styles";
 import { useState } from "react";
 import { MCATextField } from "../components/MCATextField";
@@ -20,6 +20,7 @@ export default function ProductForm({ navigation, route }) {
     const [fieldIndex, setFieldIndex] = useState(0)
     const [files, setFiles] = useState([])
     const [complete, setComplete] = useState(false)
+    const [busy, setBusy] = useState(false)
 
     let formFields = productData["form_fields"].filter((item) => { return (transactionRef.trim().length < 1) ? item["show_first"] : !item["show_first"] }).sort((a, b) => a.position - b.position)
 
@@ -104,6 +105,9 @@ export default function ProductForm({ navigation, route }) {
     }
 
     function completePurchase() {
+
+        setBusy(true)
+
         uploadFiles().then(() => {
 
             updateData("is_full_year", true)
@@ -128,7 +132,7 @@ export default function ProductForm({ navigation, route }) {
                     } else {
                         Alert.alert("Request Failed", json["responseText"])
                     }
-                })
+                }).finally(() => setBusy(false))
         })
     }
 
@@ -158,53 +162,66 @@ export default function ProductForm({ navigation, route }) {
 
     else
         return (
+            <View style={{ flex: 1 }}>
 
-            <MCALayout onBackPressed={onBackPressed}>
-                <View style={{ alignItems: "center" }}>
-                    <Text style={{ fontSize: 16, fontWeight: "600", padding: 12, fontFamily: "MetropolisMedium" }} >{productData["name"]}</Text>
-                    <Text style={{ padding: 5, width: "100%", fontFamily: "MetropolisRegular", backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
-                    <View style={{ flexDirection: "row", marginVertical: 12, alignItems: "center" }}>
-                        <View style={{ flex: 1 }} ></View>
-                        <Text style={{ fontFamily: "MetropolisRegular" }}>Underwritten By: </Text>
-                        {getImage(productData["prefix"])}
+                <MCALayout onBackPressed={onBackPressed}>
+                    <View style={{ alignItems: "center" }}>
+                        <Text style={{ fontSize: 16, fontWeight: "600", padding: 12, fontFamily: "MetropolisMedium" }} >{productData["name"]}</Text>
+                        <Text style={{ padding: 5, width: "100%", fontFamily: "MetropolisRegular", backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
+                        <View style={{ flexDirection: "row", marginVertical: 12, alignItems: "center" }}>
+                            <View style={{ flex: 1 }} ></View>
+                            <Text style={{ fontFamily: "MetropolisRegular" }}>Underwritten By: </Text>
+                            {getImage(productData["prefix"])}
+                        </View>
                     </View>
-                </View>
-                <View style={{ flex: 1 }}>
-                    {resolveFields().map((element) => {
-                        let fieldType = element["input_type"]
-                        let dataType = element["data_type"].toLowerCase();
+                    <View style={{ flex: 1 }}>
+                        {resolveFields().map((element) => {
+                            let fieldType = element["input_type"]
+                            let dataType = element["data_type"].toLowerCase();
 
-                        function onDataChange(value) {
+                            function onDataChange(value) {
+                                if (dataType == "array") {
+                                    updateData(element["name"], value)
+                                } else if (dataType == "number") {
+                                    updateData(element["name"], parseInt(value))
+                                }
+                                else if (dataType == "boolean") {
+                                    console.log(value)
+                                    updateData(element["name"], (value.toLowerCase() == "true") ? true : false)
+                                } else {
+                                    updateData(element["name"], value)
+                                }
+                            }
+
+
                             if (dataType == "array") {
-                                updateData(element["name"], value)
-                            } else if (dataType == "number") {
-                                updateData(element["name"], parseInt(value))
+                                return <ItemPair onUpdate={onDataChange} data={element} />
                             }
-                            else if (dataType == "boolean") {
-                                console.log(value)
-                                updateData(element["name"], (value.toLowerCase() == "true") ? true : false)
-                            } else {
-                                updateData(element["name"], value)
+
+                            switch (fieldType) {
+                                case "file":
+                                    return <FilePicker onFilePicked={onFilePicked} data={element} />
+                                case "date":
+                                    return <MDatePicker dateValueChanged={onDataChange} keyValue={element["label"]} editable={false} data={element} />
+                                default:
+                                    return <MCATextField onDataChange={onDataChange} valueString={formData[element["name"]]} keyValue={element["label"]} editable={true} data={element} />
                             }
-                        }
+                        })}
+                    </View>
+                    <Button onPress={progressOrNavigate} color={colorPrimary} title="Continue" />
+                </MCALayout>
 
+                {(busy) ? <View style={{ zIndex: 2, flex: 1, height: "100%", width: "100%", marginTop: "6%", position: "absolute", justifyContent: "center", alignItems: "center", backgroundColor: colorGreyOverlay }}>
+                    <ActivityIndicator style={{ margin: 12, color: "#3BAA90" }} animating={true} />
+                    <Text style={{ fontFamily: "MetropolisMedium", margin: 12, fontSize: 16, color: "white" }} > Sending request... </Text>
 
-                        if (dataType == "array") {
-                            return <ItemPair onUpdate={onDataChange} data={element} />
-                        }
-
-                        switch (fieldType) {
-                            case "file":
-                                return <FilePicker onFilePicked={onFilePicked} data={element} />
-                            case "date":
-                                return <MDatePicker dateValueChanged={onDataChange} keyValue={element["label"]} editable={false} data={element} />
-                            default:
-                                return <MCATextField onDataChange={onDataChange} valueString={formData[element["name"]]} keyValue={element["label"]} editable={true} data={element} />
-                        }
-                    })}
                 </View>
-                <Button onPress={progressOrNavigate} color={colorPrimary} title="Continue" />
-            </MCALayout>
+                    : null
+
+                }
+
+            </View>
+
         );
 }
 

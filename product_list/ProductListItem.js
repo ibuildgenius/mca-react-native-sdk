@@ -1,6 +1,12 @@
 import { View, Text, Pressable, Image } from "react-native"
 import { styles } from "../style/styles";
 import { getImage } from "../product_forms/ProductForms";
+import Health from "../assets/health.svg";
+import Gadget from "../assets/gadget.svg";
+import Home from "../assets/home.svg";
+import Hospital from "../assets/hospital.svg";
+import Office from "../assets/office.svg";
+import { colorNavy } from "../style/colors";
 
 export default function ProductListItem(props) {
     const data = props.data
@@ -8,16 +14,18 @@ export default function ProductListItem(props) {
     function resolveImage() {
         let name = data["name"].toLowerCase();
 
+        let size = "30"
+
         if (name.includes("home")) {
-            return require("../assets/home.png")
+            return <Home width={size} height={size} />
         } else if (name.includes("gadget")) {
-            return require("../assets/gadget.png")
+            return <Gadget width={size} height={size} />
         } else if (name.includes("office")) {
-            return require("../assets/office.png")
+            return <Office width={size} height={size} />
         } else if (name.includes("health") || name.includes("hospital")) {
-            return require("../assets/hospital.png")
+            return <Hospital width={size} height={size} />
         } else {
-            return require("../assets/health.png")
+            return <Health width={size} height={size} />
         }
     }
 
@@ -35,12 +43,11 @@ export default function ProductListItem(props) {
         <Pressable onPress={navigate} style={({ pressed }) => pressed && { opacity: 0.7 }}>
             <View style={styles.listItem}>
                 <View style={{ flex: 1, justifyContent: "center" }}>
-                    <Image style={styles.listImage} source={resolveImage()} />
-
+                    {resolveImage()}
                 </View>
                 <View style={{ flex: 5, marginHorizontal: 8 }}>
 
-                    <Text style={{ marginBottom: 8, color: "#344054", fontFamily: "MetropolisMedium", fontWeight: "600" }}>{data["name"]}</Text>
+                    <Text style={{ marginBottom: 8, color: "#344054", fontFamily: "MetropolisMedium", fontWeight: "600", color: colorNavy }}>{data["name"]}</Text>
 
                     <View style={{ flexDirection: "row", marginTop: 2, alignItems: "center" }}>
                         <Text style={{ fontFamily: "MetropolisRegular", color: "#667085", marginRight: 5 }} >{data["prefix"]}</Text>

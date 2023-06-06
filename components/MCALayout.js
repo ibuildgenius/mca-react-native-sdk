@@ -7,7 +7,7 @@ export default function MCALayout(props) {
         <View style={styles.appContainer}>
             <View style={styles.spacerHorizontal}></View>
             {(!props.onBackPressed) ? <></> : <View style={{ flexDirection: "row" }}>
-                <Pressable onPress={props.onBackPressed}>
+                <Pressable style={{ padding: 12 }} onPress={props.onBackPressed}>
                     <Image source={require('../assets/back.png')} />
                 </Pressable>
             </View>}

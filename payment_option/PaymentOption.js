@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, Image, Button, Alert, ImageBackground, Modal } from "react-native";
+import { View, Text, StyleSheet, Image, Button, Alert, ActivityIndicator } from "react-native";
 import MCALayout from "../components/MCALayout";
 import { useEffect, useState } from "react";
 import { BASE_URL, TOKEN, instanceId } from "../api/constants";
 import SuccessScreen from "../components/SuccessScreen";
+import { colorGreyOverlay } from "../style/colors";
 
 export default function PaymentOption({ navigation, route }) {
     let product = route.params.data.product
@@ -12,6 +13,7 @@ export default function PaymentOption({ navigation, route }) {
     let [paymentDetails, setPaymentDetails] = useState({})
     let [paymentResponse, setPaymentResponse] = useState({})
     let [paymentVerified, setPaymentVerified] = useState(false)
+    let [message, setMessage] = useState("Sending request...")
 
     const [paymentString, setPaymentString] = useState("bank transfer")
 
@@ -54,6 +56,10 @@ export default function PaymentOption({ navigation, route }) {
             .finally(() => setLoading(false))
     }
     function verifyPayment() {
+
+        setMessage("Verifying transaction...")
+        setLoading(true)
+
         let url = BASE_URL + "/v1/sdk/verify-transaction"
 
         let body = JSON.stringify({
@@ -156,17 +162,6 @@ export default function PaymentOption({ navigation, route }) {
 
             <MCALayout>
                 <View style={{ flex: 1, flexDirection: "column" }}>
-                    {/* <ImageBackground
-                    blurRadius={4}
-                    source={require("../assets/logo.png")}
-                >
-                    <Modal visible={true} animationType="fade">
-                        <View>
-                            <Text>Please Wait</Text>
-                        </View>
-
-                    </Modal>
-                </ImageBackground> */}
                     <View style={{ flex: 1 }}>
                         <View style={style.bio}>
                             <Text style={{ fontSize: 16, fontFamily: "MetropolisMedium", }}>{hasSubmitted ? formData["email"] : product["name"]}</Text>
@@ -179,10 +174,13 @@ export default function PaymentOption({ navigation, route }) {
                 </View>
 
             </MCALayout>
+            {(loading) ? <View style={{ zIndex: 2, flex: 1, height: "100%", width: "100%", marginTop: "6%", position: "absolute", justifyContent: "center", alignItems: "center", backgroundColor: colorGreyOverlay }}>
+                <ActivityIndicator style={{ margin: 12, color: "#3BAA90" }} animating={true} />
+                <Text style={{ fontFamily: "MetropolisMedium", margin: 12, fontSize: 16, color: "white" }} >{message}</Text>
+            </View>
+                : null
 
-            {/* <View style={{ zIndex: 2, flex: 1, height: "100%", width: "100%", marginTop: "6%", position: "absolute", justifyContent: "center", backgroundColor: "red" }}>
-                <Text>Hello</Text>
-            </View> */}
+            }
 
         </View>
     );

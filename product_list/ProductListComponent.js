@@ -1,8 +1,9 @@
-import { View, Text, Button, FlatList, StyleSheet, Pressable, ActivityIndicator } from "react-native"
+import { View, Text, Button, FlatList, StyleSheet, Pressable, ActivityIndicator, TextInput } from "react-native"
 import { styles } from "../style/styles"
 import { useState, useEffect } from "react"
 import { BASE_URL, TOKEN, initiatePurchase } from "../api/constants";
 import ProductListItem from "./ProductListItem";
+import SearchIcon from "../assets/search.svg";
 
 function ProductList({ navigation }) {
 
@@ -68,7 +69,14 @@ function ProductList({ navigation }) {
                     </View>
                 ) : (
                     <View style={{ flex: 1, justifyContent: "flex-start" }}>
-                        <Text style={styles.titleText}>Products</Text>
+                        <Text style={styles.titleText}>Product Page</Text>
+
+
+                        <View style={{ flexDirection: "row", marginVertical: 4, borderWidth: 0.5, borderRadius: 25, borderColor: "#D0D5DD", alignItems: "center", paddingVertical: 6, paddingHorizontal: 12 }}>
+                            <SearchIcon />
+                            <TextInput style={{ marginLeft: 8, fontFamily: "MetropolisRegular", flex: 1 }} placeholderTextColor={"#98A2B3"} placeholder="Search Products" />
+                        </View>
+
 
                         {ProductFilterOptions(filters, filterOption, (option) => {
                             setFilterOption(option)
