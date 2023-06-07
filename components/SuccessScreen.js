@@ -1,7 +1,6 @@
 import { Button, View, Text } from "react-native";
 import MCALayout from "./MCALayout";
 import { colorPrimary } from "../style/colors";
-import AnimatedLottieView from "lottie-react-native";
 
 export default function SuccessScreen(props) {
     var message = props.message || "Lorem Ipsum"

@@ -1,6 +1,7 @@
 import { View, Text, Image, Pressable } from "react-native"
 import { styles } from "../style/styles"
 import { colorPrimary } from "../style/colors"
+import BackButton from "../assets/back.svg"
 
 export default function MCALayout(props) {
     return (
@@ -8,7 +9,7 @@ export default function MCALayout(props) {
             <View style={styles.spacerHorizontal}></View>
             {(!props.onBackPressed) ? <></> : <View style={{ flexDirection: "row" }}>
                 <Pressable style={{ padding: 12 }} onPress={props.onBackPressed}>
-                    <Image source={require('../assets/back.png')} />
+                    <BackButton width={30} height={30} />
                 </Pressable>
             </View>}
 

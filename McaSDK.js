@@ -6,8 +6,9 @@ import ProductForm from './product_forms/ProductForms';
 import PaymentOption from './payment_option/PaymentOption';
 import SuccessScreen from './components/SuccessScreen';
 import { useFonts } from "expo-font"
+import { Text, View } from 'react-native';
 
-export default function App() {
+export default function McaSDK() {
 
   const [loaded] = useFonts({
     MetropolisRegular: require("./assets/fonts/metropolis_regular.otf"),
@@ -19,10 +20,10 @@ export default function App() {
   const Stack = createNativeStackNavigator();
 
   if (!loaded) {
-    return null;
+    return <Text>Not Loaded</Text>;
   }
 
-  return (
+  return (<>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ title: "", headerShown: false }} initialRouteName='ProductList'>
         <Stack.Screen
@@ -47,5 +48,6 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+  </>
   );
 }
