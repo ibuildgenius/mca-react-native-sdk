@@ -1,5 +1,5 @@
 {
-  "name": "mca-react-native-sdk",
+  "name": "@mycoverai/mca-react-native-sdk",
   "version": "0.0.6",
   "main": "./McaSDK.js",
   "dependencies": {
@@ -31,7 +31,7 @@
   "description": "MCA Insurance SDK",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Xheghun/mca-react-sdk.git"
+    "url": "git+https://github.com/ibuildgenius/mca-react-native-sdk.git"
   },
   "keywords": [
     "insurance",
@@ -42,9 +42,9 @@
     "gadget"
   ],
   "author": "Xheghun",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Xheghun/mca-react-sdk/issues"
+    "url": "https://github.com/ibuildgenius/mca-react-native-sdk/issues"
   },
-  "homepage": "https://github.com/Xheghun/mca-react-sdk#readme"
+  "homepage": "https://github.com/ibuildgenius/mca-react-native-sdk#readme"
 }
