@@ -1,6 +1,6 @@
 {
   "name": "@mycoverai/mca-react-native-sdk",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "./McaSDK.js",
   "dependencies": {
     "@react-native-community/datetimepicker": "6.7.3",
@@ -28,7 +28,7 @@
     "react": "*",
     "react-native": "*"
   },
-  "description": "MCA Insurance SDK",
+  "description": "Official MyCover.ai SDK. Supercharge your product with MyCover AI Insurance offerings. Create embedded insurance offerings or full white label insurance applications that excite your customers.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ibuildgenius/mca-react-native-sdk.git"
