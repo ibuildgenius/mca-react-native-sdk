@@ -18,6 +18,7 @@ import McaSDK from "mca-react-native-sdk"
 
 2. proceed to call the Mycover.ai component in your file
 
-```
+```javascript
+
  <McaSDK apiKey="<YOUR-MCA-API-KEY>" onComplete={} />
 ```
