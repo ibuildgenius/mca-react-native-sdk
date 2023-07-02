@@ -1,6 +1,6 @@
 # MCA React Native SDK
 
-An android SDK built natively with kotlin and Jetpack Compose, for buying insurance policies, powered by the mycover.ai platform.
+Our React Native SDK powered by the mycover.ai platform, for buying and managing insurance policies.
 
 ### Installation
 
