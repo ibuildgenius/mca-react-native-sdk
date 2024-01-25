@@ -56,7 +56,7 @@ export default function ItemPair(props) {
             </Pressable>
             <Modal visible={showModal}>
                 <View style={styles.appContainer}>
-                    <Text style={{ marginVertical: 15, fontSize: 16, textAlign: "center", fontFamily: "MetropolisMedium" }}>Item Info</Text>
+                    <Text style={{ marginVertical: 15, fontSize: 16, textAlign: "center", fontFamily: "Raleway_500Medium" }}>Item Info</Text>
                     <MCATextField onDataChange={updateName} data={{ "label": "Name", "description": "Item name", "form_field": { "name": "none" } }} />
                     <MCATextField onDataChange={updateAmount} data={{ "label": "Amount", "description": "Item Amount", "form_field": { "name": "none" } }} />
                     <View style={{ marginHorizontal: "10%", marginVertical: 20, flexDirection: "row" }}>
@@ -71,7 +71,7 @@ export default function ItemPair(props) {
                     {
                         (entries.length > 0) ?
                             (<View style={{ flex: 1 }}>
-                                <Text style={{ marginVertical: 12, fontFamily: "MetropolisMedium" }}> Items</Text>
+                                <Text style={{ marginVertical: 12, fontFamily: "Raleway_500Medium" }}> Items</Text>
                                 <FlatList data={entries} renderItem={(itemData) => {
                                     let item = itemData.item
 
@@ -86,13 +86,13 @@ export default function ItemPair(props) {
                                     return (
                                         <View style={{ flexDirection: "row", alignItems: "center", borderRadius: 6, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: "#F4F3FF", marginVertical: 2 }}>
                                             <View>
-                                                <Text style={{ fontFamily: "MetropolisRegular", color: "#667085", fontSize: 12, marginBottom: 5 }}>Name</Text>
-                                                <Text style={{ fontFamily: "MetropolisRegular", fontSize: 16 }}>{item.name}</Text>
+                                                <Text style={{ fontFamily: "Raleway_400Regular", color: "#667085", fontSize: 12, marginBottom: 5 }}>Name</Text>
+                                                <Text style={{ fontFamily: "Raleway_400Regular", fontSize: 16 }}>{item.name}</Text>
                                             </View>
                                             <View style={{ flex: 1 }} />
                                             <View >
-                                                <Text style={{ fontFamily: "MetropolisRegular", color: "#667085", fontSize: 12, marginBottom: 5 }}>Amount</Text>
-                                                <Text style={{ fontFamily: "MetropolisRegular" }}>N {item.amount}</Text>
+                                                <Text style={{ fontFamily: "Raleway_400Regular", color: "#667085", fontSize: 12, marginBottom: 5 }}>Amount</Text>
+                                                <Text style={{ fontFamily: "Raleway_400Regular" }}>N {item.amount}</Text>
                                             </View>
 
 

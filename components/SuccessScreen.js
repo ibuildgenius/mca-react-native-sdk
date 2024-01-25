@@ -13,7 +13,7 @@ export default function SuccessScreen(props) {
         <MCALayout>
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 
-                <Text style={{ fontFamily: "MetropolisMedium", fontSize: 18, textAlign: "center" }}>
+                <Text style={{ fontFamily: "Raleway_500Medium", fontSize: 18, textAlign: "center" }}>
                     {message}
                 </Text>
             </View>

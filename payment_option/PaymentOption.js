@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, Image, Button, Alert, ActivityIndicator } from "react-native";
 import MCALayout from "../components/MCALayout";
-import { useEffect, useState } from "react";
-import { BASE_URL, TOKEN, instanceId } from "../api/constants";
+import { useState } from "react";
 import SuccessScreen from "../components/SuccessScreen";
 import { colorGreyOverlay } from "../style/colors";
+import {useApiKeyStore} from "../store/urlApiKeyStore";
 
 export default function PaymentOption({ navigation, route }) {
     let product = route.params.data.product
@@ -14,6 +14,7 @@ export default function PaymentOption({ navigation, route }) {
     let [paymentResponse, setPaymentResponse] = useState({})
     let [paymentVerified, setPaymentVerified] = useState(false)
     let [message, setMessage] = useState("Sending request...")
+    let {apiKey,baseUrl} = useApiKeyStore();
 
     const [paymentString, setPaymentString] = useState("bank transfer")
 
@@ -34,18 +35,15 @@ export default function PaymentOption({ navigation, route }) {
 
         setLoading(true)
 
-        let url = BASE_URL + "/v1/sdk/initiate-purchase"
+        let url = baseUrl + "/v1/sdk/initiate-purchase"
 
-        const headers = { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" }
+        const headers = { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" }
 
         let jsonBody = JSON.stringify(payload)
-
-        console.log(jsonBody)
 
         fetch(url, { method: "POST", headers: headers, body: jsonBody })
             .then((response) => response.json())
             .then((json) => {
-                console.log(json)
                 if (json["responseCode"] == 1) {
                     setButtonText("I have sent the money")
                     setPaymentDetails(json)
@@ -60,18 +58,17 @@ export default function PaymentOption({ navigation, route }) {
         setMessage("Verifying transaction...")
         setLoading(true)
 
-        let url = BASE_URL + "/v1/sdk/verify-transaction"
+        let url = baseUrl + "/v1/sdk/verify-transaction"
 
         let body = JSON.stringify({
             transaction_reference: paymentDetails["data"]["reference"]
         });
 
-        let headers = { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" }
+        let headers = { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" }
 
         fetch(url, { method: "POST", headers: headers, body: body })
             .then((response) => response.json())
             .then((json) => {
-                console.log(json)
                 if (json["responseCode"] == 1) {
                     setPaymentResponse(json["data"])
                     setPaymentVerified(true)
@@ -97,7 +94,7 @@ export default function PaymentOption({ navigation, route }) {
             return (
                 <View style={{ flex: 1, marginVertical: 8, backgroundColor: "#F9FAFB" }}>
                     <View style={{ flex: 5, alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ fontFamily: "MetropolisRegular", marginVertical: 12, color: "green" }}>{bankDetails["message"]}</Text>
+                        <Text style={{ fontFamily: "Raleway_400Regular", marginVertical: 12, color: "green" }}>{bankDetails["message"]}</Text>
                         <View
                             style={{
                                 width: "80%",
@@ -106,7 +103,7 @@ export default function PaymentOption({ navigation, route }) {
                                 borderBottomWidth: StyleSheet.hairlineWidth,
                             }}
                         />
-                        <Text style={{ fontFamily: "MetropolisBold", textAlign: "center", fontSize: 25, fontWeight: "600", marginVertical: 12 }}>{bankDetails["bank"] + "\n" + bankDetails["account_number"]}</Text>
+                        <Text style={{ fontFamily: "Raleway_700Bold", textAlign: "center", fontSize: 25, fontWeight: "600", marginVertical: 12 }}>{bankDetails["bank"] + "\n" + bankDetails["account_number"]}</Text>
                         <View
                             style={{
                                 width: "80%",
@@ -123,8 +120,8 @@ export default function PaymentOption({ navigation, route }) {
 
         return (
             <View style={{ flex: 1 }}>
-                <Text style={{ marginTop: 18, fontSize: 18, fontFamily: "MetropolisBold" }}>Select Payment Method</Text>
-                <Text style={{ color: "#667085", marginTop: 5, marginBottom: 15, fontSize: 14, fontFamily: "MetropolisRegular" }} >Choose an option to proceed</Text>
+                <Text style={{ marginTop: 18, fontSize: 18, fontFamily: "Raleway_700Bold" }}>Select Payment Method</Text>
+                <Text style={{ color: "#667085", marginTop: 5, marginBottom: 15, fontSize: 14, fontFamily: "Raleway_400Regular" }} >Choose an option to proceed</Text>
 
                 <PaymentOptionCard imagePath={require("../assets/transfer.png")} selected={paymentString == "bank transfer"} title="Transfer" sub="Send to bank account" />
                 <View style={{ opacity: 0.2 }}>
@@ -164,8 +161,8 @@ export default function PaymentOption({ navigation, route }) {
                 <View style={{ flex: 1, flexDirection: "column" }}>
                     <View style={{ flex: 1 }}>
                         <View style={style.bio}>
-                            <Text style={{ fontSize: 16, fontFamily: "MetropolisMedium", }}>{hasSubmitted ? formData["email"] : product["name"]}</Text>
-                            <Text style={{ fontFamily: "MetropolisRegular", color: "#98A2B3" }}>{hasSubmitted ? "N" + paymentDetails["data"]["amount"] : formData["email"]}</Text>
+                            <Text style={{ fontSize: 16, fontFamily: "Raleway_500Medium", }}>{hasSubmitted ? formData["email"] : product["name"]}</Text>
+                            <Text style={{ fontFamily: "Raleway_400Regular", color: "#98A2B3" }}>{hasSubmitted ? "N" + paymentDetails["data"]["amount"] : formData["email"]}</Text>
                         </View>
                         {renderLayout()}
                     </View>
@@ -176,7 +173,7 @@ export default function PaymentOption({ navigation, route }) {
             </MCALayout>
             {(loading) ? <View style={{ zIndex: 2, flex: 1, height: "100%", width: "100%", marginTop: "6%", position: "absolute", justifyContent: "center", alignItems: "center", backgroundColor: colorGreyOverlay }}>
                 <ActivityIndicator style={{ margin: 12, color: "#3BAA90" }} animating={true} />
-                <Text style={{ fontFamily: "MetropolisMedium", margin: 12, fontSize: 16, color: "white" }} >{message}</Text>
+                <Text style={{ fontFamily: "Raleway_500Medium", margin: 12, fontSize: 16, color: "white" }} >{message}</Text>
             </View>
                 : null
 
@@ -223,8 +220,8 @@ export function PaymentOptionCard(props) {
         <View style={selected ? style.cardSelected : style.card}>
             <Image source={props.imagePath} />
             <View style={{ marginHorizontal: 12 }}>
-                <Text style={{ fontWeight: "600", fontFamily: "MetropolisMedium", fontSize: 15 }} >{props.title}</Text>
-                <Text style={{ marginTop: 5, fontSize: 12, fontFamily: "MetropolisRegular" }}>{props.sub}</Text>
+                <Text style={{ fontWeight: "600", fontFamily: "Raleway_500Medium", fontSize: 15 }} >{props.title}</Text>
+                <Text style={{ marginTop: 5, fontSize: 12, fontFamily: "Raleway_400Regular" }}>{props.sub}</Text>
             </View>
         </View>
     );

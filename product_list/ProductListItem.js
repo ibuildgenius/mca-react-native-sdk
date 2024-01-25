@@ -7,6 +7,7 @@ import Home from "../assets/home.svg";
 import Hospital from "../assets/hospital.svg";
 import Office from "../assets/office.svg";
 import { colorNavy } from "../style/colors";
+import {currencify} from "../api/constants";
 
 export default function ProductListItem(props) {
     const data = props.data
@@ -47,17 +48,17 @@ export default function ProductListItem(props) {
                 </View>
                 <View style={{ flex: 5, marginHorizontal: 8 }}>
 
-                    <Text style={{ marginBottom: 8, color: "#344054", fontFamily: "MetropolisMedium", fontWeight: "600", color: colorNavy }}>{data["name"]}</Text>
+                    <Text style={{ marginBottom: 8, fontFamily: "Raleway_500Medium", fontWeight: "600", color: colorNavy }}>{data["name"]}</Text>
 
                     <View style={{ flexDirection: "row", marginTop: 2, alignItems: "center" }}>
-                        <Text style={{ fontFamily: "MetropolisRegular", color: "#667085", marginRight: 5 }} >{data["prefix"]}</Text>
+                        <Text style={{ fontFamily: "Raleway_400Regular", color: "#667085", marginRight: 5 }} >{data["prefix"]}</Text>
                         {getIcon()}
                     </View>
 
 
                 </View>
                 <View style={{ flex: 2, flexDirection: "row-reverse", alignItems: "center" }}>
-                    {(data["is_dynamic_pricing"]) ? (<Text style={{ fontFamily: "MetropolisRegular", fontSize: 12 }}>% {price}</Text>) : (<Text>N {price}</Text>)}
+                    {(data["is_dynamic_pricing"]) ? (<Text>{price}%</Text>) : (<Text>₦{currencify(price)}</Text>)}
 
                 </View>
             </View>

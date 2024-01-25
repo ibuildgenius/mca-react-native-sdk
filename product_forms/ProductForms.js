@@ -1,17 +1,17 @@
-import { Text, View, Image, Button, Alert, ActivityIndicator } from "react-native";
+import {ActivityIndicator, Alert, Button, Image, Text, View} from "react-native";
 import MCALayout from "../components/MCALayout";
-import { colorGreyOverlay, colorPrimary } from "../style/colors";
-import { styles } from "../style/styles";
-import { useState } from "react";
-import { MCATextField } from "../components/MCATextField";
-import { MDatePicker } from "../components/MDatePicker"
+import {colorGreyOverlay, colorPrimary} from "../style/colors";
+import {useState} from "react";
+import {MCATextField} from "../components/MCATextField";
+import {MDatePicker} from "../components/MDatePicker"
 import FilePicker from "../components/FilePicker";
-import { BASE_URL, TOKEN } from "../api/constants";
 import ItemPair from "../components/ItemPair";
 import SuccessScreen from "../components/SuccessScreen";
+import {useApiKeyStore} from "../store/urlApiKeyStore";
 
 export default function ProductForm({ navigation, route }) {
 
+    let {apiKey,baseUrl} = useApiKeyStore();
     let productData = route.params.data
     let transactionRef = route.params.transactionRef || ""
     //let existingFormData = route.params.formData
@@ -31,9 +31,6 @@ export default function ProductForm({ navigation, route }) {
     }
 
     function progressOrNavigate() {
-
-        console.log(formData)
-
         if (fieldIndex < (chunkedFields().length - 1)) {
             setFieldIndex(fieldIndex + 1)
         } else {
@@ -60,28 +57,23 @@ export default function ProductForm({ navigation, route }) {
     }
 
     function resolveFields() {
-        let chunk = chunkedFields()[fieldIndex]
-
-        return chunk
+        return chunkedFields()[fieldIndex]
     }
 
 
     async function uploadFiles() {
         for (let i = 0; i < files.length; i++) {
-
-            console.log(files[i].fileUri)
-
             const formData = new FormData()
 
             formData.append("file", { uri: files[i].fileDetail.uri, type: "image/png", name: files[i].fileDetail.name })
 
             let headers = {
-                "Authorization": "Bearer " + TOKEN,
+                "Authorization": "Bearer " + apiKey,
                 "Accept": "application/json",
                 "Content-Type": "multipart/form-data"
             }
 
-            let url = BASE_URL + "/v1/upload-file"
+            let url = baseUrl + "/v1/upload-file"
 
             try {
                 let response = await fetch(url, {
@@ -91,8 +83,6 @@ export default function ProductForm({ navigation, route }) {
                 })
 
                 let json = await response.json()
-
-                console.log(json)
 
                 if (json["responseCode"] == 1) {
                     updateData(files[i].key, json["data"]["file_url"])
@@ -112,21 +102,17 @@ export default function ProductForm({ navigation, route }) {
 
             updateData("is_full_year", true)
 
-            let url = BASE_URL + "/v1/sdk/complete-purchase"
+            let url = baseUrl + "/v1/sdk/complete-purchase"
 
-            let headers = { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" }
+            let headers = { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" }
 
             let body = JSON.stringify({
                 payload: formData,
                 reference: transactionRef
             })
-
-            console.log(formData)
-
             fetch(url, { method: "POST", headers: headers, body })
                 .then((response) => response.json())
                 .then((json) => {
-                    console.log(json)
                     if (json["responseCode"] == 1) {
                         setComplete(true)
                     } else {
@@ -139,7 +125,6 @@ export default function ProductForm({ navigation, route }) {
 
     function onFilePicked(key, file) {
         let pair = { key: key, fileDetail: { uri: file.uri, name: file.name } }
-        console.log(key)
         setFiles(currentFiles => [...currentFiles, pair])
     }
 
@@ -163,19 +148,18 @@ export default function ProductForm({ navigation, route }) {
     else
         return (
             <View style={{ flex: 1 }}>
-
                 <MCALayout onBackPressed={onBackPressed}>
                     <View style={{ alignItems: "center" }}>
-                        <Text style={{ fontSize: 16, fontWeight: "600", padding: 12, fontFamily: "MetropolisMedium" }} >{productData["name"]}</Text>
-                        <Text style={{ padding: 5, width: "100%", fontFamily: "MetropolisRegular", backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
+                        <Text style={{ fontSize: 16, fontWeight: "600", padding: 12, fontFamily: "Raleway_500Medium" }} >{productData["name"]}</Text>
+                        <Text style={{ padding: 5, width: "100%", fontFamily: "Raleway_400Regular", backgroundColor: "#F6FEF9" }} >Enter Details as it appears on legal document</Text>
                         <View style={{ flexDirection: "row", marginVertical: 12, alignItems: "center" }}>
                             <View style={{ flex: 1 }} ></View>
-                            <Text style={{ fontFamily: "MetropolisRegular" }}>Underwritten By: </Text>
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>Underwritten By: </Text>
                             {getImage(productData["prefix"])}
                         </View>
                     </View>
                     <View style={{ flex: 1 }}>
-                        {resolveFields().map((element) => {
+                        {resolveFields().map((element, index) => {
                             let fieldType = element["input_type"]
                             let dataType = element["data_type"].toLowerCase();
 
@@ -186,7 +170,6 @@ export default function ProductForm({ navigation, route }) {
                                     updateData(element["name"], parseInt(value))
                                 }
                                 else if (dataType == "boolean") {
-                                    console.log(value)
                                     updateData(element["name"], (value.toLowerCase() == "true") ? true : false)
                                 } else {
                                     updateData(element["name"], value)
@@ -195,14 +178,14 @@ export default function ProductForm({ navigation, route }) {
 
 
                             if (dataType == "array") {
-                                return <ItemPair onUpdate={onDataChange} data={element} />
+                                return <ItemPair key={index} onUpdate={onDataChange} data={element} />
                             }
 
                             switch (fieldType) {
                                 case "file":
-                                    return <FilePicker onFilePicked={onFilePicked} data={element} />
+                                    return <FilePicker key={index} onFilePicked={onFilePicked} data={element} />
                                 case "date":
-                                    return <MDatePicker dateValueChanged={onDataChange} keyValue={element["label"]} editable={false} data={element} />
+                                    return <MDatePicker key={index} dateValueChanged={onDataChange} keyValue={element["label"]} editable={false} data={element} />
                                 default:
                                     return <MCATextField onDataChange={onDataChange} valueString={formData[element["name"]]} keyValue={element["label"]} editable={true} data={element} />
                             }
@@ -210,10 +193,9 @@ export default function ProductForm({ navigation, route }) {
                     </View>
                     <Button onPress={progressOrNavigate} color={colorPrimary} title="Continue" />
                 </MCALayout>
-
                 {(busy) ? <View style={{ zIndex: 2, flex: 1, height: "100%", width: "100%", marginTop: "6%", position: "absolute", justifyContent: "center", alignItems: "center", backgroundColor: colorGreyOverlay }}>
                     <ActivityIndicator style={{ margin: 12, color: "#3BAA90" }} animating={true} />
-                    <Text style={{ fontFamily: "MetropolisMedium", margin: 12, fontSize: 16, color: "white" }} > Sending request... </Text>
+                    <Text style={{ fontFamily: "Raleway_500Medium", margin: 12, fontSize: 16, color: "white" }} > Sending request... </Text>
 
                 </View>
                     : null

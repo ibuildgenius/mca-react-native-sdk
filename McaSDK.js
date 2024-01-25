@@ -5,23 +5,34 @@ import ProductInfo from './product_info/ProductInfoComponent';
 import ProductForm from './product_forms/ProductForms';
 import PaymentOption from './payment_option/PaymentOption';
 import SuccessScreen from './components/SuccessScreen';
-//import { useFonts } from "expo-font"
+import { useFonts } from "expo-font"
 import { Text, View } from 'react-native';
+import { registerRootComponent } from 'expo';
+import { Raleway_400Regular, Raleway_500Medium, Raleway_700Bold } from "@expo-google-fonts/raleway";
+import {TOKEN} from "./api/constants";
+import {useApiKeyStore} from "./store/urlApiKeyStore";
+import {useEffect} from "react";
 
-export default function McaSDK() {
+export default function McaSDK(props) {
 
-  // const [loaded] = useFonts({
-  //   MetropolisRegular: require("./assets/fonts/metropolis_regular.otf"),
-  //   MetropolisMedium: require("./assets/fonts/metropolis_medium.otf"),
-  //   MetropolisBold: require("./assets/fonts/metropolis_bold.otf")
-  // })
+  let {setApiKey, setBaseUrl} = useApiKeyStore();
+  useEffect(() => {
+    setApiKey(props.apiKey ?? TOKEN);
+    setBaseUrl();
+  },[])
+
+  const [loaded] = useFonts({
+    Raleway_400Regular,
+    Raleway_500Medium,
+    Raleway_700Bold
+  })
 
 
   const Stack = createNativeStackNavigator();
 
-  // if (!loaded) {
-  //   return <Text>Not Loaded</Text>;
-  // }
+  if (!loaded) {
+    return <Text>Not Loaded</Text>;
+  }
 
   return (<>
     <NavigationContainer>
@@ -51,3 +62,5 @@ export default function McaSDK() {
   </>
   );
 }
+
+registerRootComponent(McaSDK);

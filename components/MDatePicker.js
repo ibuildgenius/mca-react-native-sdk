@@ -16,7 +16,6 @@ export function MDatePicker(props) {
     }
 
     function onPickerChanged(event, date) {
-        console.log(" event type " + event.type)
         closePicker()
         setDate(date)
         props.dateValueChanged(isoDate)

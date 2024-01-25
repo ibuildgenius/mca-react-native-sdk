@@ -11,7 +11,7 @@ export default function HowToClaim(props) {
 
     let tagStyle = {
         span: {
-            fontFamily: "MetropolisRegular",
+            fontFamily: "Raleway_400Regular",
             marginBottom: 10
         },
 

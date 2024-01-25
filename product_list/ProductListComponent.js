@@ -1,26 +1,26 @@
 import { View, Text, Button, FlatList, StyleSheet, Pressable, ActivityIndicator, TextInput } from "react-native"
 import { styles } from "../style/styles"
 import { useState, useEffect } from "react"
-import { BASE_URL, TOKEN, initiatePurchase } from "../api/constants";
+import { initiatePurchase } from "../api/constants";
 import ProductListItem from "./ProductListItem";
 import SearchIcon from "../assets/search.svg";
+import {useApiKeyStore} from "../store/urlApiKeyStore";
 
-function ProductList({ navigation }) {
+export default function ProductList({ navigation }) {
 
+    let {apiKey,baseUrl} = useApiKeyStore();
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([])
     const [filters, setFilters] = useState([])
     const [filterOption, setFilterOption] = useState("All")
 
-    const url = BASE_URL + initiatePurchase
+    const url = baseUrl + initiatePurchase
 
-    const headers = { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" }
+    const headers = { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" }
     const jsonBody = JSON.stringify({
         action: "purchase",
         payment_option: "gateway"
     })
-
-
 
     useEffect(() => {
         fetch(url, { method: "POST", headers: headers, body: jsonBody })
@@ -65,7 +65,7 @@ function ProductList({ navigation }) {
                 (
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%" }}>
                         <ActivityIndicator style={{ margin: 12, color: "#3BAA90" }} animating={loading} />
-                        <Text style={{ fontFamily: "MetropolisMedium" }}>Fetching Products...</Text>
+                        <Text style={{ fontFamily: "Raleway_500Medium" }}>Fetching Products...</Text>
                     </View>
                 ) : (
                     <View style={{ flex: 1, justifyContent: "flex-start" }}>
@@ -74,7 +74,7 @@ function ProductList({ navigation }) {
 
                         <View style={{ flexDirection: "row", marginVertical: 4, borderWidth: 0.5, borderRadius: 25, borderColor: "#D0D5DD", alignItems: "center", paddingVertical: 6, paddingHorizontal: 12 }}>
                             <SearchIcon />
-                            <TextInput style={{ marginLeft: 8, fontFamily: "MetropolisRegular", flex: 1 }} placeholderTextColor={"#98A2B3"} placeholder="Search Products" />
+                            <TextInput style={{ marginLeft: 8, fontFamily: "Raleway_400Regular", flex: 1 }} placeholderTextColor={"#98A2B3"} placeholder="Search Products" />
                         </View>
 
 
@@ -93,7 +93,6 @@ function ProductList({ navigation }) {
     )
 }
 
-export default ProductList
 
 function ProductFilterOptions(options, filterOption, onItemPressed) {
 
@@ -123,7 +122,7 @@ function ProductFilterOptions(options, filterOption, onItemPressed) {
         inactiveText: {
             textAlign: "center",
             color: "#3BAA90",
-            fontFamily: "MetropolisRegular",
+            fontFamily: "Raleway_400Regular",
             fontSize: 14,
             fontWeight: "400"
         },
@@ -131,11 +130,10 @@ function ProductFilterOptions(options, filterOption, onItemPressed) {
         activeText: {
             textAlign: "center",
             color: "white",
-            fontFamily: "MetropolisRegular",
+            fontFamily: "Raleway_400Regular",
             fontSize: 14,
             fontWeight: "400"
         }
-
 
     });
 

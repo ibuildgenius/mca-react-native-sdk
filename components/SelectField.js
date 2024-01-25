@@ -1,10 +1,11 @@
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { BASE_URL, TOKEN } from "../api/constants";
+import {useApiKeyStore} from "../store/urlApiKeyStore";
 
 export function SelectField(props) {
 
+    let {apiKey,baseUrl} = useApiKeyStore();
     const [options, setOptions] = useState(["Select an Option"])
     const [hasFetchedData, setHasFetchedData] = useState(false)
 
@@ -22,12 +23,8 @@ export function SelectField(props) {
 
         //  if (!hasFetchedData) {
 
-        const url = BASE_URL + "/v1" + data["data_url"]
-
-        console.log(url)
-
-
-        const headers = { "Authorization": "Bearer " + TOKEN }
+        const url = baseUrl + "/v1" + data["data_url"]
+        const headers = { "Authorization": "Bearer " + apiKey }
 
         useEffect(() => {
             fetch(url, { headers: headers, method: "GET" })
@@ -53,16 +50,16 @@ export function SelectField(props) {
 
     return (
         <View>
-            <Text style={{ marginVertical: 5, fontFamily: "MetropolisRegular" }}>{data["label"]}</Text>
+            <Text style={{ marginVertical: 5, fontFamily: "Raleway_400Regular" }}>{data["label"]}</Text>
             <View style={{ backgroundColor: "#EAECF0", borderRadius: 5 }}>
                 <Picker
-                    itemStyle={{ fontSize: 20, fontFamily: "MetropolisRegular" }}
+                    itemStyle={{ fontSize: 20, fontFamily: "Raleway_400Regular" }}
                     mode="dropdown"
                     selectedValue={selectValue}
                     onValueChange={onValueChanged}>
                     {
                         options.map((item) => {
-                            return <Picker.Item fontFamily="MetropolisRegular" label={item.charAt(0).toLocaleUpperCase() + item.substring(1)} value={item} />
+                            return <Picker.Item fontFamily="Raleway_400Regular" label={item.charAt(0).toLocaleUpperCase() + item.substring(1)} value={item} />
                         })
                     }
                 </Picker>

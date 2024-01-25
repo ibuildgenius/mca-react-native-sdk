@@ -1,6 +1,5 @@
-import { View, Text, useWindowDimensions, Button } from "react-native"
+import { useWindowDimensions, Button } from "react-native"
 
-import { styles } from "../style/styles"
 import MCALayout from "../components/MCALayout"
 import { SceneMap, TabView, TabBar } from "react-native-tab-view"
 import HowItWorks from "./HowItWorks"
@@ -47,7 +46,7 @@ function ProductInfo({ navigation, route }) {
             indicatorStyle={{ backgroundColor: '#F2F4F7' }}
             activeColor="#3BAA90"
             inactiveColor="#364657"
-            labelStyle={{ textTransform: "none", fontFamily: "MetropolisMedium", textAlign: "center", fontSize: 12, fontWeight: "600" }}
+            labelStyle={{ textTransform: "none", fontFamily: "Raleway_500Medium", textAlign: "center", fontSize: 12, fontWeight: "600" }}
             style={{ backgroundColor: '#F2F4F7', elevation: 0 }}
         />
     );

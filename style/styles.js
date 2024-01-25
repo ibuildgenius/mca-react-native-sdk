@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
         fontWeight: "500",
         width: "100%",
         textAlign: "center",
-        fontFamily: "MetropolisBold"
+        fontFamily: "Raleway_700Bold"
     },
 
     listItem: {
@@ -26,7 +26,6 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "flex-start",
         margin: 4,
-        paddingHorizontal: 8,
         backgroundColor: "#ffffff",
         borderRadius: 3,
     },
