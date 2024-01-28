@@ -17,7 +17,7 @@ export default function McaSDK(props) {
 
   let {setApiKey, setBaseUrl} = useApiKeyStore();
   useEffect(() => {
-    setApiKey(props.apiKey ?? TOKEN);
+    setApiKey(props.apiKey);
     setBaseUrl();
   },[])
 
