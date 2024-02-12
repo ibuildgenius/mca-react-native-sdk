@@ -12,14 +12,23 @@ npm install --dev react-native-svg-transformer
 ### Create or Update metro.config.js & paste the following
 
 ``` 
-const { getDefaultConfig } = require('expo/metro-config');
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 
-const config = getDefaultConfig(__dirname);
-config.resolver.assetExts = config.resolver.assetExts.filter(ext => ext !== 'svg');
-config.resolver.sourceExts.push('svg');
-config.transformer.babelTransformerPath = require.resolve('react-native-svg-transformer')
+const defaultConfig = getDefaultConfig(__dirname);
+const {assetExts, sourceExts} = defaultConfig.resolver;
 
-module.exports = config;
+const config = {
+  transformer: {
+    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+  },
+  resolver: {
+    assetExts: assetExts.filter(ext => ext !== 'svg'),
+    sourceExts: [...sourceExts, 'svg'],
+  },
+};
+
+module.exports = mergeConfig(defaultConfig, config);
+
 ```
 
 ### Usage
@@ -27,12 +36,12 @@ module.exports = config;
 1. import the package into your js file
 
 ```javascript
-import McaSDK from "mca-react-native-sdk"
+import McaSDK from "@mycoverai/mca-react-native-sdk"
 ```
 
 2. proceed to call the Mycover.ai component in your file
 
 ```javascript
 
- <McaSDK apiKey="<YOUR-MCA-API-KEY>" onComplete={} />
+ <McaSDK apiKey="<YOUR-MCA-API-KEY>" onComplete={() => console.log('done')} />
 ```
