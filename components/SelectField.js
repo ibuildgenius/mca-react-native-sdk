@@ -58,9 +58,10 @@ export function SelectField(props) {
           mode="dropdown"
           selectedValue={selectValue}
           onValueChange={onValueChanged}>
-          {options.map(item => {
+          {options.map((item, index) => {
             return (
               <Picker.Item
+                  key={index}
                 color={colorBlack}
                 fontFamily="metropolis_regular"
                 label={item.charAt(0).toLocaleUpperCase() + item.substring(1)}

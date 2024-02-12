@@ -253,6 +253,7 @@ export default function ProductForm({navigation, route}) {
                 default:
                   return (
                     <MCATextField
+                      key={index+element}
                       onDataChange={onDataChange}
                       valueString={formData[element['name']]}
                       keyValue={element['label']}
