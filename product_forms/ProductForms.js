@@ -39,7 +39,6 @@ export default function ProductForm({navigation, route}) {
   function updateData(key, value) {
     let newMap = formData;
     newMap[key] = value;
-    console.log(key+' - '+value);
     setFormData(newMap);
   }
 

@@ -14,7 +14,7 @@ export function MCATextField(props) {
   }
 
   return (
-    <View key={props.key} style={{width: '100%', marginVertical: 6}}>
+    <View key={data.id} style={{width: '100%', marginVertical: 6}}>
       <Text style={{marginVertical: 6, fontFamily: 'metropolis_regular',color: colorBlack}}>
         {data.label}
       </Text>
