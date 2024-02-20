@@ -7,11 +7,13 @@ import PaymentOption from './payment_option/PaymentOption';
 import SuccessScreen from './components/SuccessScreen';
 import {useApiKeyStore} from './store/urlApiKeyStore';
 import {useEffect} from 'react';
+import {AppRegistry} from 'react-native';
+import {name as appName} from './app.json';
 
 export default function McaSDK(props) {
   let {setApiKey} = useApiKeyStore();
   useEffect(() => {
-    setApiKey(props.apiKey);
+    setApiKey(props.apiKey ?? 'MCAPUBK_TEST|44d8c41c-b436-40f6-bfc9-b0d52f0253bb');
   }, []);
 
   const Stack = createNativeStackNavigator();
@@ -32,4 +34,12 @@ export default function McaSDK(props) {
     </>
   );
 }
+
+ function Test() {
+  return (
+      <McaSDK apiKey="MCAPUBK_TEST|44d8c41c-b436-40f6-bfc9-b0d52f0253bb" />
+  );
+}
+
+AppRegistry.registerComponent(appName, () => Test);
 
