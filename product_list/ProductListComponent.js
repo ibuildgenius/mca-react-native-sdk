@@ -113,10 +113,11 @@ export default function ProductList({navigation}) {
               placeholder="Search Products"
             />
           </View>
-
-          {ProductFilterOptions(filters, filterOption, option => {
-            setFilterOption(option);
-          })}
+          <View>
+            {ProductFilterOptions(filters, filterOption, option => {
+              setFilterOption(option);
+            })}
+          </View>
           <FlatList
             showsVerticalScrollIndicator={false}
             style={{paddingBottom: 10}}
@@ -147,6 +148,7 @@ function ProductFilterOptions(options, filterOption, onItemPressed) {
       borderWidth: 0.8,
       borderColor: '#3BAA90',
       justifyContent: 'center',
+      height: 30,
     },
 
     activeContainer: {
@@ -158,6 +160,7 @@ function ProductFilterOptions(options, filterOption, onItemPressed) {
       borderWidth: 1,
       borderColor: '#3BAA90',
       justifyContent: 'center',
+      height: 30,
     },
 
     inactiveText: {
