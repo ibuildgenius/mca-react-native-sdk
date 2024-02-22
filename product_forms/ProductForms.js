@@ -5,6 +5,8 @@ import {
   Image,
   Text,
   View,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import MCALayout from '../components/MCALayout';
 import { colorBlack, colorGreyOverlay, colorPrimary } from "../style/colors";
@@ -17,6 +19,7 @@ import SuccessScreen from '../components/SuccessScreen';
 import {useApiKeyStore} from '../store/urlApiKeyStore';
 
 export default function ProductForm({navigation, route}) {
+  const screenHeight = Dimensions.get('window').height;
   let {apiKey, baseUrl} = useApiKeyStore();
   let productData = route.params.data;
   let transactionRef = route.params.transactionRef || '';
@@ -165,7 +168,8 @@ export default function ProductForm({navigation, route}) {
     );
   else
     return (
-      <View style={{flex: 1}}>
+      <ScrollView>
+      <View style={{ height: screenHeight }}>
         <MCALayout onBackPressed={onBackPressed}>
           <View style={{alignItems: 'center'}}>
             <Text
@@ -300,6 +304,7 @@ export default function ProductForm({navigation, route}) {
           </View>
         ) : null}
       </View>
+      </ScrollView>
     );
 }
 
