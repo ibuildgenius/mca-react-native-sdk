@@ -4,7 +4,8 @@ export const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
     paddingHorizontal: 12,
-    paddingTop: 12,
+    // paddingTop:5,
+    paddingBottom:5,
   },
 
   spacerHorizontal: {
@@ -19,6 +20,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
     fontFamily: 'metropolis_bold',
+    paddingBottom: 15
   },
 
   listItem: {
@@ -59,5 +61,14 @@ export const styles = StyleSheet.create({
   htmlContent: {
     flex: 1,
     paddingHorizontal: 10,
+    paddingTop:10
+  },
+  inActiveTabContainer: {
+    flex: 1,
+    color: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1, // Set the width of the border
+    borderRadius: 4, // Set border radius if needed
   },
 });

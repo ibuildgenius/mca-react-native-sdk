@@ -10,15 +10,16 @@ export default function MCALayout(props) {
       {!props.onBackPressed ? (
         <></>
       ) : (
-        <View style={{flexDirection: 'row'}}>
-          <Pressable style={{padding: 12}} onPress={props.onBackPressed}>
+        <View style={{ position: 'relative', alignItems: 'center', paddingBottom: 5 }}>
+          <Pressable style={{ position: 'absolute', left: 0, top: 0, padding: 12 }} onPress={props.onBackPressed}>
             <BackButton width={30} height={30} />
           </Pressable>
+
+          <Image style={styles.logo} source={require('../assets/logo.png')} />
         </View>
       )}
 
       <View style={{flex: 1, alignItems: 'center'}}>
-        <Image style={styles.logo} source={require('../assets/logo.png')} />
         <View style={{flex: 1, width: '100%'}}>{props.children}</View>
         <Image
           style={styles.poweredBy}

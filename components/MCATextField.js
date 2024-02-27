@@ -1,6 +1,6 @@
 import {TextInput, View, Text} from 'react-native';
 import {SelectField} from './SelectField';
-import { colorBlack } from "../style/colors";
+import { colorBlack, colorGreyOverlay } from "../style/colors";
 
 export function MCATextField(props) {
   let data = props.data;
@@ -15,7 +15,7 @@ export function MCATextField(props) {
 
   return (
     <View style={{width: '100%', marginVertical: 6}}>
-      <Text style={{marginVertical: 6, fontFamily: 'metropolis_regular',color: colorBlack}}>
+      <Text style={{marginVertical: 6, fontFamily: 'metropolis_regular',color: colorBlack, marginBottom:7}}>
         {data.label}
       </Text>
       <View style={{backgroundColor: '#EAECF0', borderRadius: 5}}>
@@ -28,8 +28,9 @@ export function MCATextField(props) {
             padding: 6,
             fontFamily: 'metropolis_regular',
             color: colorBlack,
+            minHeight:48,
           }}
-          placeholderTextColor={colorBlack}
+          placeholderTextColor={colorGreyOverlay}
           placeholder={
             !props.editable && props.valueString
               ? props.valueString
