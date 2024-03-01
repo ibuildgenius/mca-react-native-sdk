@@ -88,7 +88,7 @@ export default function PaymentOption({navigation, route}) {
           setPaymentResponse(json.data);
           setPaymentVerified(true);
         } else {
-          Alert.alert('Unable to Verify', json.responseText);
+          Alert.alert('Unable to Verify', json.message);
         }
       })
       .catch(error => {
@@ -110,7 +110,7 @@ export default function PaymentOption({navigation, route}) {
     if (paymentDetails.responseCode == 1) {
       let bankDetails = paymentDetails.data;
       return (
-        <View style={{flex: 1, marginVertical: 8, backgroundColor: '#F9FAFB'}}>
+        <View style={{flex: 1, marginVertical: 8, backgroundColor: '#F9FAFB', marginHorizontal:10}}>
           <View
             style={{flex: 5, alignItems: 'center', justifyContent: 'center'}}>
             <Text
@@ -155,7 +155,7 @@ export default function PaymentOption({navigation, route}) {
     }
 
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, paddingHorizontal:15, paddingTop:5}}>
         <Text
           style={{marginTop: 18, fontSize: 18, fontFamily: 'metropolis_bold',color: colorBlack}}>
           Select Payment Method
@@ -163,9 +163,9 @@ export default function PaymentOption({navigation, route}) {
         <Text
           style={{
             color: '#667085',
-            marginTop: 5,
-            marginBottom: 15,
-            fontSize: 14,
+            marginTop: 2,
+            marginBottom: 20,
+            fontSize: 13,
             fontFamily: 'metropolis_regular',
           }}>
           Choose an option to proceed
@@ -214,17 +214,21 @@ export default function PaymentOption({navigation, route}) {
   return (
     <View style={{flex: 1}}>
       <MCALayout>
-        <View style={{flex: 1, flexDirection: 'column'}}>
-          <View style={{flex: 1}}>
+        <View style={{flex: 1, flexDirection: 'column', paddingTop:10}}>
+          <View style={{flex: 1,}}>
             <View style={style.bio}>
-              <Text style={{fontSize: 16, fontFamily: 'metropolis_medium',color: colorBlack}}>
+              <Text style={{fontSize: 16, fontFamily: 'metropolis_medium',color: colorBlack, paddingBottom:5}}>
                 {hasSubmitted ? formData.email : product.name}
               </Text>
-              <Text
-                style={{fontFamily: 'metropolis_regular', color: colorBlack}}>
-                {hasSubmitted
-                  ? '₦' + currencify(paymentDetails.data.amount)
-                  : formData.email}
+              <Text style={{ fontFamily: 'metropolis_regular', paddingBottom: 10, fontSize: 15 }}>
+                {hasSubmitted ? (
+                  <Text>
+                    <Text style={{ color: colorBlack }}>Pay  </Text>
+                    <Text style={{ fontFamily: 'metropolis_bold', color: '#039855', fontSize: 19 }}>{'₦' + currencify(paymentDetails.data.amount)}</Text>
+                  </Text>
+                ) : (
+                  formData.email
+                )}
               </Text>
             </View>
             {renderLayout()}
@@ -271,6 +275,9 @@ export default function PaymentOption({navigation, route}) {
 const style = StyleSheet.create({
   bio: {
     padding: 8,
+    paddingTop:8,
+    paddingHorizontal:15,
+    marginHorizontal:10,
     marginVertical: 8,
     alignItems: 'flex-end',
     backgroundColor: '#F6FEF9',

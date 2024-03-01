@@ -28,11 +28,14 @@ export function SelectField(props) {
       fetch(url, {headers: headers, method: 'GET'})
         .then(response => response.json())
         .then(json => {
-          if (json.responseCode == 1) {
+          if (json.responseCode === 1) {
+            
             if (json.data[0].name) {
               setOptions(json.data.map(element => element.name));
+              onValueChanged(json.data[0].name);
             } else {
               setOptions(json.data.map(element => element.toString()));
+              onValueChanged(json.data[0].toString());
             }
             setHasFetchedData(true);
           }

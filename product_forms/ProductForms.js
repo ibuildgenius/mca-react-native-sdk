@@ -17,6 +17,7 @@ import FilePicker from '../components/FilePicker';
 import ItemPair from '../components/ItemPair';
 import SuccessScreen from '../components/SuccessScreen';
 import {useApiKeyStore} from '../store/urlApiKeyStore';
+import InfoIcon from '../assets/info.svg';
 
 export default function ProductForm({navigation, route}) {
   const screenHeight = Dimensions.get('window').height;
@@ -135,7 +136,7 @@ export default function ProductForm({navigation, route}) {
           if (json['responseCode'] == 1) {
             setComplete(true);
           } else {
-            Alert.alert('Request Failed', json['responseText']);
+            Alert.alert('Request Failed', json['message']);
           }
         })
         .finally(() => setBusy(false));
@@ -150,6 +151,11 @@ export default function ProductForm({navigation, route}) {
   function onBackPressed() {
     if (fieldIndex > 0) {
       setFieldIndex(fieldIndex - 1);
+    }
+    else{
+      if(!transactionRef){
+        navigation.goBack();
+      }
     }
   }
 
@@ -182,16 +188,29 @@ export default function ProductForm({navigation, route}) {
               }}>
               {productData['name']}
             </Text>
-            <Text
-              style={{
-                padding: 5,
-                width: '100%',
-                fontFamily: 'metropolis_regular',
-                backgroundColor: '#F6FEF9',
-                color: colorBlack,
+            <View style={{
+               backgroundColor: '#F6FEF9',
+                flexDirection: 'row',
+                marginHorizontal: 12,
+                alignItems: 'center',
+                paddingHorizontal:10,
+                paddingVertical:10,
+                borderRadius: 10, 
+                marginTop:5,
               }}>
-              Enter Details as it appears on legal document
-            </Text>
+              <InfoIcon width={15} height={15} />
+              <Text
+                style={{
+                  paddingLeft:10,
+                  padding: 5,
+                  width: '100%',
+                  fontFamily: 'metropolis_regular',
+                  color: colorBlack,
+                }}>
+                Enter Details as it appears on legal document.
+              </Text>
+
+            </View>
             <View
               style={{
                 flexDirection: 'row',
@@ -205,7 +224,7 @@ export default function ProductForm({navigation, route}) {
               {getImage(productData['prefix'])}
             </View>
           </View>
-          <View style={{flex: 1}}>
+          <View style={{flex: 1, paddingHorizontal:5}}>
             {resolveFields().map((element, index) => {
               let fieldType = element['input_type'];
               let dataType = element['data_type'].toLowerCase();

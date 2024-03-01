@@ -6,7 +6,7 @@ import Gadget from '../assets/gadget.svg';
 import Home from '../assets/home.svg';
 import Hospital from '../assets/hospital.svg';
 import Office from '../assets/office.svg';
-import { colorBlack, colorNavy } from "../style/colors";
+import { colorBlack, colorNavy } from '../style/colors';
 import {currencify} from '../api/constants';
 
 export default function ProductListItem(props) {
@@ -18,6 +18,7 @@ export default function ProductListItem(props) {
     let size = '30';
 
     if (name.includes('home')) {
+      
       return <Home width={size} height={size} />;
     } else if (name.includes('gadget')) {
       return <Gadget width={size} height={size} />;

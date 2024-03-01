@@ -1,4 +1,4 @@
-import {useWindowDimensions, Button} from 'react-native';
+import {useWindowDimensions, Button, View, Text} from 'react-native';
 
 import MCALayout from '../components/MCALayout';
 import {SceneMap, TabView, TabBar} from 'react-native-tab-view';
@@ -52,9 +52,12 @@ function ProductInfo({navigation, route}) {
   function nextScreen() {
     navigation.navigate('ProductForm', {data: productData});
   }
+  function onBackPressed() {
+    navigation.goBack();
+  }
 
   return (
-    <MCALayout>
+    <MCALayout onBackPressed={onBackPressed}>
       <TabView
         style={{flex: 1}}
         swipeEnabled={false}
