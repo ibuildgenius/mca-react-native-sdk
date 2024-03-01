@@ -60,7 +60,7 @@ export default function PaymentOption({navigation, route}) {
           setButtonText('I have sent the money');
           setPaymentDetails(json);
         } else {
-          failedDialog(json.message);
+          failedDialog(json.responseText);
         }
       })
       .catch(error => {})

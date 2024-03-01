@@ -70,7 +70,7 @@ export default function ProductList({ navigation }) {
           updateFilters(json.data.productDetails);
         })
         .catch((error) => {
-          const errorMessage = JSON.parse(error.message).message;
+          const errorMessage = JSON.parse(error.message).responseText;
           showFailedDialog(errorMessage);
         })
         .finally(() => setLoading(false));
