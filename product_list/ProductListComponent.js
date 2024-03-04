@@ -20,6 +20,7 @@ import { useApiKeyStore } from "../store/urlApiKeyStore";
 export default function ProductList({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
+  const [filterText, setFilterText] = useState('');
   const [filters, setFilters] = useState([]);
   const [filterOption, setFilterOption] = useState("All");
   let { apiKey, baseUrl } = useApiKeyStore();
@@ -81,8 +82,12 @@ export default function ProductList({ navigation }) {
     var p = products;
 
     if (filterOption.toLowerCase() != "all") {
-      p = products.filter((item) => item.prefix == filterOption);
+      p = products.filter((item) => item.prefix == filterOption );
     }
+    if (filterText) {
+      p = p.filter((item) => item.name.toLowerCase().includes(filterText.toLowerCase()));
+    }
+
     return p.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
@@ -142,11 +147,13 @@ export default function ProductList({ navigation }) {
               }}
               placeholderTextColor={"#98A2B3"}
               placeholder="Search Products"
+              onChangeText={(text) => setFilterText(text)}
+              value={filterText}    
             />
           </View>
           <View style={{ paddingVertical: 5 }}>
             {ProductFilterOptions(filters, filterOption, (option) => {
-              setFilterOption(option);
+              setFilterOption(option), filterText;
             })}
           </View>
           <FlatList
@@ -168,7 +175,7 @@ export default function ProductList({ navigation }) {
   );
 }
 
-function ProductFilterOptions(options, filterOption, onItemPressed) {
+function ProductFilterOptions(options, filterOption, onItemPressed, filterText) {
   const style = StyleSheet.create({
     inactiveContainer: {
       backgroundColor: "white",
