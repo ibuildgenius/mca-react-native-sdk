@@ -133,7 +133,7 @@ export default function ProductList({ navigation }) {
               borderRadius: 25,
               borderColor: "#D0D5DD",
               alignItems: "center",
-              paddingVertical: 6,
+              paddingVertical: 3,
               paddingHorizontal: 12,
               backgroundColor: "#ffffff",
             }}
