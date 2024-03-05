@@ -21,7 +21,7 @@ export default function McaSDK(props) {
 
   return (
     <>
-      <NavigationContainer>
+      <NavigationContainer independent={true}>
         <Stack.Navigator
           screenOptions={{title: '', headerShown: false}}
           initialRouteName="ProductList">
