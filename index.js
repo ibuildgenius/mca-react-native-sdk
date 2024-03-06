@@ -11,16 +11,17 @@ import {useEffect} from 'react';
 // import {name as appName} from './app.json';
 
 export default function McaSDK(props) {
-  let {setApiKey} = useApiKeyStore();
+  let {setApiKey, setOnComplete} = useApiKeyStore();
   useEffect(() => {
     setApiKey(props.apiKey ?? 'MCAPUBK_TEST|44d8c41c-b436-40f6-bfc9-b0d52f0253bb');
+    setOnComplete(props.onComplete ?? (() => console.log('Done')));
   }, []);
 
   const Stack = createNativeStackNavigator();
 
   return (
     <>
-      <NavigationContainer>
+      <NavigationContainer independent={true}>
         <Stack.Navigator
           screenOptions={{title: '', headerShown: false}}
           initialRouteName="ProductList">

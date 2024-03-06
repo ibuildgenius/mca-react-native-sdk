@@ -6,29 +6,33 @@ import {
   Button,
   Alert,
   ActivityIndicator,
-} from 'react-native';
-import MCALayout from '../components/MCALayout';
-import {useState} from 'react';
-import SuccessScreen from '../components/SuccessScreen';
+} from "react-native";
+import MCALayout from "../components/MCALayout";
+import { useState } from "react";
+import SuccessScreen from "../components/SuccessScreen";
 import { colorBlack, colorGreyOverlay } from "../style/colors";
-import {useApiKeyStore} from '../store/urlApiKeyStore';
+import { useApiKeyStore } from "../store/urlApiKeyStore";
+import { usePaymentStore } from "../store/paymentStore";
 import { currencify } from "../api/constants";
 
-export default function PaymentOption({navigation, route}) {
+export default function PaymentOption({ navigation, route }) {
   let product = route.params.data.product;
   let formData = route.params.data.form;
   let [loading, setLoading] = useState(false);
-  let [buttonText, setButtonText] = useState('Get Covered');
+  let [buttonText, setButtonText] = useState("Get Covered");
   let [paymentDetails, setPaymentDetails] = useState({});
   let [paymentResponse, setPaymentResponse] = useState({});
   let [paymentVerified, setPaymentVerified] = useState(false);
-  let [message, setMessage] = useState('Sending request...');
-  let {apiKey, baseUrl} = useApiKeyStore();
+  let [message, setMessage] = useState("Sending request...");
+  let { apiKey, baseUrl } = useApiKeyStore();
+  let { setHasPaid } = usePaymentStore();
 
-  const [paymentString, setPaymentString] = useState('bank transfer');
+  let { hasPaid } = usePaymentStore();
+
+  const [paymentString, setPaymentString] = useState("bank transfer");
 
   function failedDialog(message) {
-    Alert.alert('Transaction Failed', message);
+    Alert.alert("Transaction Failed", message);
   }
 
   function initiatePurchase() {
@@ -44,61 +48,63 @@ export default function PaymentOption({navigation, route}) {
 
     setLoading(true);
 
-    let url = baseUrl + '/v1/sdk/initiate-purchase';
+    let url = baseUrl + "/v1/sdk/initiate-purchase";
 
     const headers = {
-      Authorization: 'Bearer ' + apiKey,
-      'Content-Type': 'application/json',
+      Authorization: "Bearer " + apiKey,
+      "Content-Type": "application/json",
     };
 
     let jsonBody = JSON.stringify(payload);
 
-    fetch(url, {method: 'POST', headers: headers, body: jsonBody})
-      .then(response => response.json())
-      .then(json => {
+    fetch(url, { method: "POST", headers: headers, body: jsonBody })
+      .then((response) => response.json())
+      .then((json) => {
         if (json.responseCode == 1) {
-          setButtonText('I have sent the money');
+          setButtonText("I have sent the money");
           setPaymentDetails(json);
         } else {
           failedDialog(json.responseText);
         }
       })
-      .catch(error => {})
+      .catch((error) => {})
       .finally(() => setLoading(false));
   }
   function verifyPayment() {
-    setMessage('Verifying transaction...');
+    setMessage("Verifying transaction...");
     setLoading(true);
 
-    let url = baseUrl + '/v1/sdk/verify-transaction';
+    let url = baseUrl + "/v1/sdk/verify-transaction";
 
     let body = JSON.stringify({
       transaction_reference: paymentDetails.data.reference,
     });
 
     let headers = {
-      Authorization: 'Bearer ' + apiKey,
-      'Content-Type': 'application/json',
+      Authorization: "Bearer " + apiKey,
+      "Content-Type": "application/json",
     };
 
-    fetch(url, {method: 'POST', headers: headers, body: body})
-      .then(response => response.json())
-      .then(json => {
+    fetch(url, { method: "POST", headers: headers, body: body })
+      .then((response) => response.json())
+      .then((json) => {
         if (json.responseCode == 1) {
           setPaymentResponse(json.data);
+          setHasPaid(true);
+          console.log(hasPaid, "Has PAID");
           setPaymentVerified(true);
         } else {
-          Alert.alert('Unable to Verify', json.message);
+          Alert.alert("Unable to Verify", json.message);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       })
       .finally(() => setLoading(false));
   }
 
   function navigateToNext() {
-    navigation.navigate('ProductForm', {
+    navigation.navigate("ProductForm", {
       data: product,
       formData: formData,
       transactionRef: paymentResponse.reference,
@@ -110,77 +116,94 @@ export default function PaymentOption({navigation, route}) {
     if (paymentDetails.responseCode == 1) {
       let bankDetails = paymentDetails.data;
       return (
-        <View style={{flex: 1, marginVertical: 8, backgroundColor: '#F9FAFB', marginHorizontal:10}}>
+        <View
+          style={{
+            flex: 1,
+            marginVertical: 8,
+            backgroundColor: "#F9FAFB",
+            marginHorizontal: 10,
+          }}
+        >
           <View
-            style={{flex: 5, alignItems: 'center', justifyContent: 'center'}}>
+            style={{ flex: 5, alignItems: "center", justifyContent: "center" }}
+          >
             <Text
               style={{
-                fontFamily: 'metropolis_regular',
+                fontFamily: "metropolis_regular",
                 marginVertical: 12,
                 color: colorGreyOverlay,
-              }}>
+              }}
+            >
               {bankDetails.message}
             </Text>
             <View
               style={{
-                width: '80%',
+                width: "80%",
                 marginVertical: 12,
-                borderBottomColor: '#D0D5DD',
+                borderBottomColor: "#D0D5DD",
                 borderBottomWidth: StyleSheet.hairlineWidth,
               }}
             />
             <Text
               style={{
-                fontFamily: 'metropolis_bold',
-                textAlign: 'center',
+                fontFamily: "metropolis_bold",
+                textAlign: "center",
                 fontSize: 25,
-                fontWeight: '600',
+                fontWeight: "600",
                 marginVertical: 12,
                 color: colorBlack,
-              }}>
-              {bankDetails.bank + '\n' + bankDetails.account_number}
+              }}
+            >
+              {bankDetails.bank + "\n" + bankDetails.account_number}
             </Text>
             <View
               style={{
-                width: '80%',
+                width: "80%",
                 marginVertical: 12,
-                borderBottomColor: '#D0D5DD',
+                borderBottomColor: "#D0D5DD",
                 borderBottomWidth: StyleSheet.hairlineWidth,
               }}
             />
           </View>
-          <View style={{flex: 3}} />
+          <View style={{ flex: 3 }} />
         </View>
       );
     }
 
     return (
-      <View style={{flex: 1, paddingHorizontal:15, paddingTop:5}}>
+      <View style={{ flex: 1, paddingHorizontal: 15, paddingTop: 5 }}>
         <Text
-          style={{marginTop: 18, fontSize: 18, fontFamily: 'metropolis_bold',color: colorBlack}}>
+          style={{
+            marginTop: 18,
+            fontSize: 18,
+            fontFamily: "metropolis_bold",
+            color: colorBlack,
+          }}
+        >
           Select Payment Method
         </Text>
         <Text
           style={{
-            color: '#667085',
+            color: "#667085",
             marginTop: 2,
             marginBottom: 20,
             fontSize: 13,
-            fontFamily: 'metropolis_regular',
-          }}>
+            fontFamily: "metropolis_regular",
+          }}
+        >
           Choose an option to proceed
         </Text>
 
         <PaymentOptionCard
-          imagePath={require('../assets/transfer.png')}
-          selected={paymentString == 'bank transfer'}
+          imagePath={require("../assets/transfer.png")}
+          selected={paymentString == "bank transfer"}
           title="Transfer"
           sub="Send to bank account"
         />
-        <View style={{opacity: 0.2}}>
+        <View style={{ opacity: 0.2 }}>
           <PaymentOptionCard
-            imagePath={require('../assets/ussd.png')}
-            selected={paymentString == 'ussd'}
+            imagePath={require("../assets/ussd.png")}
+            selected={paymentString == "ussd"}
             title="USSD"
             sub="Select any bank to generate USSD"
           />
@@ -206,25 +229,46 @@ export default function PaymentOption({navigation, route}) {
   if (paymentVerified) {
     return (
       <SuccessScreen
-        message={'Payment Verified,\nplease fill out the remaining fields'}
+        message={"Payment Verified,\nplease fill out the remaining fields"}
         onDonePressed={navigateToNext}
       />
     );
   }
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <MCALayout>
-        <View style={{flex: 1, flexDirection: 'column', paddingTop:10}}>
-          <View style={{flex: 1,}}>
+        <View style={{ flex: 1, flexDirection: "column", paddingTop: 10 }}>
+          <View style={{ flex: 1 }}>
             <View style={style.bio}>
-              <Text style={{fontSize: 16, fontFamily: 'metropolis_medium',color: colorBlack, paddingBottom:5}}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "metropolis_medium",
+                  color: colorBlack,
+                  paddingBottom: 5,
+                }}
+              >
                 {hasSubmitted ? formData.email : product.name}
               </Text>
-              <Text style={{ fontFamily: 'metropolis_regular', paddingBottom: 10, fontSize: 15 }}>
+              <Text
+                style={{
+                  fontFamily: "metropolis_regular",
+                  paddingBottom: 10,
+                  fontSize: 15,
+                }}
+              >
                 {hasSubmitted ? (
                   <Text>
-                    <Text style={{ color: colorBlack }}>Pay  </Text>
-                    <Text style={{ fontFamily: 'metropolis_bold', color: '#039855', fontSize: 19 }}>{'₦' + currencify(paymentDetails.data.amount)}</Text>
+                    <Text style={{ color: colorBlack }}>Pay </Text>
+                    <Text
+                      style={{
+                        fontFamily: "metropolis_bold",
+                        color: "#039855",
+                        fontSize: 19,
+                      }}
+                    >
+                      {"₦" + currencify(paymentDetails.data.amount)}
+                    </Text>
                   </Text>
                 ) : (
                   formData.email
@@ -245,25 +289,27 @@ export default function PaymentOption({navigation, route}) {
           style={{
             zIndex: 2,
             flex: 1,
-            height: '100%',
-            width: '100%',
-            marginTop: '6%',
-            position: 'absolute',
-            justifyContent: 'center',
-            alignItems: 'center',
+            height: "100%",
+            width: "100%",
+            marginTop: "6%",
+            position: "absolute",
+            justifyContent: "center",
+            alignItems: "center",
             backgroundColor: colorGreyOverlay,
-          }}>
+          }}
+        >
           <ActivityIndicator
-            style={{margin: 12, color: '#3BAA90'}}
+            style={{ margin: 12, color: "#3BAA90" }}
             animating={true}
           />
           <Text
             style={{
-              fontFamily: 'metropolis_medium',
+              fontFamily: "metropolis_medium",
               margin: 12,
               fontSize: 16,
-              color: 'white',
-            }}>
+              color: "white",
+            }}
+          >
             {message}
           </Text>
         </View>
@@ -275,12 +321,12 @@ export default function PaymentOption({navigation, route}) {
 const style = StyleSheet.create({
   bio: {
     padding: 8,
-    paddingTop:8,
-    paddingHorizontal:15,
-    marginHorizontal:10,
+    paddingTop: 8,
+    paddingHorizontal: 15,
+    marginHorizontal: 10,
     marginVertical: 8,
-    alignItems: 'flex-end',
-    backgroundColor: '#F6FEF9',
+    alignItems: "flex-end",
+    backgroundColor: "#F6FEF9",
     borderRadius: 5,
   },
 });
@@ -289,20 +335,20 @@ export function PaymentOptionCard(props) {
   let style = StyleSheet.create({
     card: {
       marginVertical: 8,
-      flexDirection: 'row',
+      flexDirection: "row",
       paddingVertical: 12,
       borderWidth: 1,
       paddingHorizontal: 8,
-      borderColor: '#667085',
+      borderColor: "#667085",
       borderRadius: 5,
     },
     cardSelected: {
       marginVertical: 8,
-      flexDirection: 'row',
+      flexDirection: "row",
       paddingVertical: 12,
       borderWidth: 1,
       paddingHorizontal: 8,
-      borderColor: '#3BAA90',
+      borderColor: "#3BAA90",
       borderRadius: 5,
     },
   });
@@ -310,23 +356,25 @@ export function PaymentOptionCard(props) {
   return (
     <View style={selected ? style.cardSelected : style.card}>
       <Image source={props.imagePath} />
-      <View style={{marginHorizontal: 12}}>
+      <View style={{ marginHorizontal: 12 }}>
         <Text
           style={{
-            fontWeight: '600',
-            fontFamily: 'metropolis_medium',
+            fontWeight: "600",
+            fontFamily: "metropolis_medium",
             fontSize: 15,
             color: colorBlack,
-          }}>
+          }}
+        >
           {props.title}
         </Text>
         <Text
           style={{
             marginTop: 5,
             fontSize: 12,
-            fontFamily: 'metropolis_regular',
+            fontFamily: "metropolis_regular",
             color: colorBlack,
-          }}>
+          }}
+        >
           {props.sub}
         </Text>
       </View>
