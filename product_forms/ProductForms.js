@@ -54,7 +54,6 @@ export default function ProductForm({ navigation, route }) {
     const handleBackButton = () => {
       if (fieldIndex > 0) {
         setFieldIndex(fieldIndex - 1);
-        console.log(hasPaid, "Has Field Index");
 
         return true;
       } else {
@@ -109,7 +108,6 @@ export default function ProductForm({ navigation, route }) {
           setFieldIndex(0);
           setNewTransactionRef(json.data.reference);
         } else {
-          console.log(json);
           failedDialog(json.responseText);
         }
       })
@@ -123,7 +121,9 @@ export default function ProductForm({ navigation, route }) {
     if (fieldIndex < chunkedFields().length - 1) {
       setFieldIndex(fieldIndex + 1);
     } else {
-      if (!newTransactionRef) {
+      if (newTransactionRef || transactionRef ) {
+        completePurchase();
+      } else {
         if (paymentOption == "wallet") {
           initiateWalletPurchase(productData, formData);
           
@@ -133,8 +133,6 @@ export default function ProductForm({ navigation, route }) {
             data: { product: productData, form: formData },
           });
         }
-      } else {
-        completePurchase();
       }
     }
   }
@@ -206,7 +204,7 @@ export default function ProductForm({ navigation, route }) {
 
       let body = JSON.stringify({
         payload: formData,
-        reference: newTransactionRef,
+        reference: newTransactionRef && newTransactionRef !== '' ? newTransactionRef : transactionRef,
       });
       fetch(url, { method: "POST", headers: headers, body })
         .then((response) => response.json())
@@ -231,7 +229,6 @@ export default function ProductForm({ navigation, route }) {
       setFieldIndex(fieldIndex - 1);
     } else {
       if (hasPaid) {
-        console.log(hasPaid, "Ref");
         return true;
       } else {
         if (!newTransactionRef) {
