@@ -6,6 +6,7 @@ import {
   Button,
   Alert,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import MCALayout from "../components/MCALayout";
 import { useState } from "react";
@@ -14,6 +15,8 @@ import { colorBlack, colorGreyOverlay } from "../style/colors";
 import { useApiKeyStore } from "../store/urlApiKeyStore";
 import { usePaymentStore } from "../store/paymentStore";
 import { currencify } from "../api/constants";
+import BackButton from '../assets/back.svg';
+import {styles} from '../style/styles';
 
 export default function PaymentOption({ navigation, route }) {
   let product = route.params.data.product;
@@ -225,6 +228,9 @@ export default function PaymentOption({ navigation, route }) {
 
   //     }
   // }
+  function onBackPressed() {
+    navigation.goBack();
+  }
 
   if (paymentVerified) {
     return (
@@ -237,6 +243,26 @@ export default function PaymentOption({ navigation, route }) {
   return (
     <View style={{ flex: 1 }}>
       <MCALayout>
+        {hasSubmitted ? (
+          <></>
+        ) : (
+          <View
+            style={{
+              position: "relative",
+              alignItems: "center",
+              paddingBottom: 5,
+            }}
+          >
+            <Pressable
+              style={{ position: "absolute", left: 0, top: 0, padding: 12 }}
+              onPress={onBackPressed}
+            >
+              <BackButton width={30} height={30} />
+            </Pressable>
+
+            <Image style={styles.logo} source={require("../assets/logo.png")} />
+          </View>
+        )}
         <View style={{ flex: 1, flexDirection: "column", paddingTop: 10 }}>
           <View style={{ flex: 1 }}>
             <View style={style.bio}>

@@ -11,11 +11,17 @@ import {useEffect} from 'react';
 // import {name as appName} from './app.json';
 
 export default function McaSDK(props) {
-  let {setApiKey, setOnComplete} = useApiKeyStore();
+  let {setApiKey, setOnComplete, setPaymentOption, setDebitWalletReference, setForm} = useApiKeyStore();
   useEffect(() => {
-    setApiKey(props.apiKey ?? 'MCAPUBK_TEST|44d8c41c-b436-40f6-bfc9-b0d52f0253bb');
+    // MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c
+    setApiKey(props.apiKey ?? 'MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c');
+    setApiKey(props.apiKey ?? '');
+    setForm(props.form ?? {});
+    setPaymentOption(props.paymentOption ?? 'gateway');
+    setDebitWalletReference(props.debitWalletReference ?? "");
     setOnComplete(props.onComplete ?? (() => console.log('Done')));
   }, []);
+
 
   const Stack = createNativeStackNavigator();
 
@@ -43,4 +49,6 @@ export default function McaSDK(props) {
 // }
 //
 // AppRegistry.registerComponent(appName, () => Test);
+
+// registerRootComponent(McaSDK);
 

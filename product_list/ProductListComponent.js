@@ -9,6 +9,8 @@ import {
   TextInput,
   Alert,
   BackHandler,
+  SafeAreaView,
+  Platform,
 } from "react-native";
 import { styles } from "../style/styles";
 import { useState, useEffect } from "react";
@@ -20,10 +22,11 @@ import { useApiKeyStore } from "../store/urlApiKeyStore";
 export default function ProductList({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
-  const [filterText, setFilterText] = useState('');
+  const [filterText, setFilterText] = useState("");
   const [filters, setFilters] = useState([]);
   const [filterOption, setFilterOption] = useState("All");
-  let { apiKey, baseUrl } = useApiKeyStore();
+  let { apiKey, baseUrl, paymentOption, debitWalletReference } =
+    useApiKeyStore();
 
   function showFailedDialog(message) {
     Alert.alert("An Error Occured", message, [
@@ -52,7 +55,8 @@ export default function ProductList({ navigation }) {
   };
   const jsonBody = JSON.stringify({
     action: "purchase",
-    payment_option: "gateway",
+    payment_option: paymentOption,
+    debit_wallet_reference:debitWalletReference,
   });
   useEffect(() => {
     if (apiKey) {
@@ -82,10 +86,12 @@ export default function ProductList({ navigation }) {
     var p = products;
 
     if (filterOption.toLowerCase() != "all") {
-      p = products.filter((item) => item.prefix == filterOption );
+      p = products.filter((item) => item.prefix == filterOption);
     }
     if (filterText) {
-      p = p.filter((item) => item.name.toLowerCase().includes(filterText.toLowerCase()));
+      p = p.filter((item) =>
+        item.name.toLowerCase().includes(filterText.toLowerCase())
+      );
     }
 
     return p.sort((a, b) => {
@@ -103,79 +109,91 @@ export default function ProductList({ navigation }) {
   }
 
   return (
-    <View style={styles.appContainer}>
-      <View style={styles.spacerHorizontal} />
-      {loading ? (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <ActivityIndicator
-            style={{ margin: 12, color: "#3BAA90" }}
-            animating={loading}
-          />
-          <Text style={{ fontFamily: "metropolis_bold" }}>
-            Fetching Products...
-          </Text>
-        </View>
-      ) : (
-        <View style={{ flex: 1, justifyContent: "flex-start", paddingTop: 15 }}>
-          <Text style={styles.titleText}>Product Page</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.appContainer}>
+        <View style={styles.spacerHorizontal} />
+        {loading ? (
           <View
             style={{
-              flexDirection: "row",
-              marginVertical: 4,
-              borderWidth: 0.5,
-              borderRadius: 25,
-              borderColor: "#D0D5DD",
+              flex: 1,
+              justifyContent: "center",
               alignItems: "center",
-              paddingVertical: 3,
-              paddingHorizontal: 12,
-              backgroundColor: "#ffffff",
+              width: "100%",
             }}
           >
-            <SearchIcon />
-            <TextInput
+            <ActivityIndicator
+              style={{ margin: 12, color: "#3BAA90" }}
+              animating={loading}
+            />
+            <Text style={{ fontFamily: "metropolis_bold" }}>
+              Fetching Products...
+            </Text>
+          </View>
+        ) : (
+          <View
+            style={{ flex: 1, justifyContent: "flex-start", paddingTop: 0 }}
+          >
+            <Text style={styles.titleText}>Product Page</Text>
+            <View
               style={{
-                marginLeft: 8,
-                fontFamily: "metropolis_regular",
-                flex: 1,
+                flexDirection: "row",
+                marginVertical: 4,
+                borderWidth: 0.5,
+                borderRadius: 25,
+                borderColor: "#D0D5DD",
+                alignItems: "center",
+                paddingVertical: Platform.OS === "ios" ? 11 : 3,
+                paddingHorizontal: 12,
+                backgroundColor: "#ffffff",
               }}
-              placeholderTextColor={"#98A2B3"}
-              placeholder="Search Products"
-              onChangeText={(text) => setFilterText(text)}
-              value={filterText}    
+            >
+              <SearchIcon />
+              <TextInput
+                style={{
+                  marginLeft: 8,
+                  fontFamily: "metropolis_regular",
+                  flex: 1,
+                }}
+                placeholderTextColor={"#98A2B3"}
+                placeholder="Search Products"
+                onChangeText={(text) => setFilterText(text)}
+                value={filterText}
+              />
+            </View>
+            <View style={{ paddingVertical: 5 }}>
+              {ProductFilterOptions(filters, filterOption, (option) => {
+                setFilterOption(option), filterText;
+              })}
+            </View>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              style={{ paddingBottom: 10 }}
+              contentContainerStyle={{ justifyContent: "flex-start" }}
+              data={getProductList()}
+              renderItem={(itemData) => {
+                return (
+                  <ProductListItem
+                    navigator={navigation}
+                    data={itemData.item}
+                  />
+                );
+              }}
+              keyExtractor={(item, index) => item.id}
+              alwaysBounceVertical={false}
             />
           </View>
-          <View style={{ paddingVertical: 5 }}>
-            {ProductFilterOptions(filters, filterOption, (option) => {
-              setFilterOption(option), filterText;
-            })}
-          </View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{ paddingBottom: 10 }}
-            contentContainerStyle={{ justifyContent: "flex-start" }}
-            data={getProductList()}
-            renderItem={(itemData) => {
-              return (
-                <ProductListItem navigator={navigation} data={itemData.item} />
-              );
-            }}
-            keyExtractor={(item, index) => item.id}
-            alwaysBounceVertical={false}
-          />
-        </View>
-      )}
-    </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 
-function ProductFilterOptions(options, filterOption, onItemPressed, filterText) {
+function ProductFilterOptions(
+  options,
+  filterOption,
+  onItemPressed,
+  filterText
+) {
   const style = StyleSheet.create({
     inactiveContainer: {
       backgroundColor: "white",
