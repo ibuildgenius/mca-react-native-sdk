@@ -1,6 +1,6 @@
 {
   "name": "@mycoverai/mca-react-native-sdk",
-  "version": "0.0.54",
+  "version": "0.0.56",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
