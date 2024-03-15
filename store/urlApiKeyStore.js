@@ -2,7 +2,7 @@ import {create} from 'zustand';
 
 export const useApiKeyStore = create(set => ({
   apiKey: '',
-  baseUrl: 'https://staging.api.mycover.ai', // 'https://api.mycover.ai',
+  baseUrl: 'https://api.mycover.ai', // 'https://api.mycover.ai',
   paymentOption: 'gateway',
   debitWalletReference: '',
   form: {},
