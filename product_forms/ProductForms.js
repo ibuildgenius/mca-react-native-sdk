@@ -6,6 +6,7 @@ import {
   Text,
   View,
   ScrollView,
+  SafeAreaView,
   Dimensions,
   BackHandler,
 } from "react-native";
@@ -24,19 +25,32 @@ import InfoIcon from "../assets/info.svg";
 
 export default function ProductForm({ navigation, route }) {
   const screenHeight = Dimensions.get("window").height;
-  let { apiKey, baseUrl, onComplete } = useApiKeyStore();
+  let { apiKey, baseUrl, onComplete, paymentOption, debitWalletReference, form} =
+    useApiKeyStore();
   let { hasPaid } = usePaymentStore();
   let productData = route.params.data;
+
   let transactionRef = route.params.transactionRef || "";
   //let existingFormData = route.params.formData
 
-  const [formData, setFormData] = useState({});
+  let [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState(form || {});
   const [fieldIndex, setFieldIndex] = useState(0);
   const [files, setFiles] = useState([]);
   const [complete, setComplete] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [newTransactionRef, setNewTransactionRef] = useState(transactionRef ?? "");
+
+  function failedDialog(message) {
+    Alert.alert("Transaction Failed", message);
+  }
+  // useEffect(() => {
+  //   setNewTransactionRef(transactionRef)
+  // }, []);
 
   useEffect(() => {
+    
+
     const handleBackButton = () => {
       if (fieldIndex > 0) {
         setFieldIndex(fieldIndex - 1);
@@ -44,19 +58,8 @@ export default function ProductForm({ navigation, route }) {
 
         return true;
       } else {
-        if (hasPaid) {
-          console.log(hasPaid, "Ref");
-          return true;
-        } else {
-          console.log(hasPaid, "Has PAID False");
-        }
+          return hasPaid;
       }
-      // if(hasPaid){
-      //   console.log(transactionRef, "TRANSACTION REF");
-      //   console.log(hasPaid, "Has PAID TRUE");
-      //   return true;
-      // }
-      // console.log(hasPaid, "Has PAID False");
     };
 
     BackHandler.addEventListener("hardwareBackPress", handleBackButton);
@@ -64,13 +67,13 @@ export default function ProductForm({ navigation, route }) {
     return () => {
       BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
     };
-  }, [fieldIndex, hasPaid]); // Empty dependency array means this effect only runs once after mounting
+  }, [fieldIndex, hasPaid, newTransactionRef]); // Empty dependency array means this effect only runs once after mounting
 
   let formFields = productData["form_fields"]
     .filter((item) => {
-      return transactionRef.trim().length < 1
-        ? item["show_first"]
-        : !item["show_first"];
+      return (newTransactionRef.trim().length > 1) || (transactionRef.trim().length > 1)
+        ? !item["show_first"] 
+        : item["show_first"];
     })
     .sort((a, b) => a.position - b.position);
 
@@ -79,16 +82,57 @@ export default function ProductForm({ navigation, route }) {
     newMap[key] = value;
     setFormData(newMap);
   }
+  function initiateWalletPurchase(product, formData) {
+    formData.product_id = product.id;
+
+    let payload = {
+      instance_id: global.instanceId,
+      reference: debitWalletReference,
+      payload: formData,
+    };
+
+    setLoading(true);
+
+    let url = baseUrl + "/v1/sdk/initiate-purchase";
+
+    const headers = {
+      Authorization: "Bearer " + apiKey,
+      "Content-Type": "application/json",
+    };
+
+    let jsonBody = JSON.stringify(payload);
+
+    fetch(url, { method: "POST", headers: headers, body: jsonBody })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.responseCode == 1) {
+          setFieldIndex(0);
+          setNewTransactionRef(json.data.reference);
+        } else {
+          console.log(json);
+          failedDialog(json.responseText);
+        }
+      })
+      .catch((error) => {})
+      .finally(
+        () => {setLoading(false)}
+      );
+  }
 
   function progressOrNavigate() {
     if (fieldIndex < chunkedFields().length - 1) {
       setFieldIndex(fieldIndex + 1);
     } else {
-      if (!transactionRef) {
-        setFieldIndex(0);
-        navigation.navigate("PaymentOptionScreen", {
-          data: { product: productData, form: formData },
-        });
+      if (!newTransactionRef) {
+        if (paymentOption == "wallet") {
+          initiateWalletPurchase(productData, formData);
+          
+        } else {
+          setFieldIndex(0);
+          navigation.navigate("PaymentOptionScreen", {
+            data: { product: productData, form: formData },
+          });
+        }
       } else {
         completePurchase();
       }
@@ -162,7 +206,7 @@ export default function ProductForm({ navigation, route }) {
 
       let body = JSON.stringify({
         payload: formData,
-        reference: transactionRef,
+        reference: newTransactionRef,
       });
       fetch(url, { method: "POST", headers: headers, body })
         .then((response) => response.json())
@@ -190,7 +234,7 @@ export default function ProductForm({ navigation, route }) {
         console.log(hasPaid, "Ref");
         return true;
       } else {
-        if (!transactionRef) {
+        if (!newTransactionRef) {
           navigation.goBack();
         }
       }

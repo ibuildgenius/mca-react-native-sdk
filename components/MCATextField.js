@@ -22,7 +22,8 @@ export function MCATextField(props) {
         <TextInput
           key={data.id}
           onChangeText={onChange}
-          value={props.valueString}
+          // value={props.valueString}
+          defaultValue={props.valueString}
           editable={props.editable}
           style={{
             padding: 6,

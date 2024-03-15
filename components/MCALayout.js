@@ -1,10 +1,11 @@
-import {View, Text, Image, Pressable} from 'react-native';
+import {View, Text, Image, Pressable, SafeAreaView} from 'react-native';
 import {styles} from '../style/styles';
 import {colorPrimary} from '../style/colors';
 import BackButton from '../assets/back.svg';
 
 export default function MCALayout(props) {
   return (
+    <SafeAreaView style={{ flex: 1,}}>
     <View style={styles.appContainer}>
       <View style={styles.spacerHorizontal} />
       {!props.onBackPressed ? (
@@ -27,5 +28,6 @@ export default function MCALayout(props) {
         />
       </View>
     </View>
+    </SafeAreaView>
   );
 }
