@@ -90,7 +90,7 @@ export default function ProductForm({ navigation, route }) {
       payload: formData,
     };
 
-    setLoading(true);
+    setBusy(true);
 
     let url = baseUrl + "/v1/sdk/initiate-purchase";
 
@@ -113,7 +113,7 @@ export default function ProductForm({ navigation, route }) {
       })
       .catch((error) => {})
       .finally(
-        () => {setLoading(false)}
+        () => {setBusy(false)}
       );
   }
 
@@ -414,6 +414,7 @@ export default function ProductForm({ navigation, route }) {
               </Text>
             </View>
           ) : null}
+          
         </View>
       </ScrollView>
     );
