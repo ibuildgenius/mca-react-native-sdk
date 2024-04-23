@@ -16,7 +16,6 @@ export default function McaSDK(props) {
     // MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c
     setApiKey(props.apiKey ?? 'MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c');
     setApiKey(props.apiKey ?? '');
-    // setApiKey(props.apiKey ?? 'MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c');
     setForm(props.form ?? {});
     setPaymentOption(props.paymentOption ?? 'gateway');
     setDebitWalletReference(props.debitWalletReference ?? "");
