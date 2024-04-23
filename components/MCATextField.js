@@ -1,5 +1,6 @@
-import {TextInput, View, Text} from 'react-native';
+import {TextInput, View, Text, Platform,} from 'react-native';
 import {SelectField} from './SelectField';
+import {IOSSelectField } from './IosSelectField';
 import { colorBlack, colorGreyOverlay } from "../style/colors";
 
 export function MCATextField(props) {
@@ -10,7 +11,13 @@ export function MCATextField(props) {
   }
 
   if (data.form_field.name.toLowerCase() === 'select') {
-    return <SelectField key={data.id} onChangeData={onChange} data={data} />;
+    // return 
+    if (Platform.OS === "ios") {
+      return <IOSSelectField key={data.id} onChangeData={onChange} data={data} />;
+    }
+    else{
+      return <SelectField key={data.id} onChangeData={onChange} data={data} />;
+    }
   }
 
   return (

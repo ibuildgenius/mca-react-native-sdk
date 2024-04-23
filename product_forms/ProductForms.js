@@ -240,7 +240,7 @@ export default function ProductForm({ navigation, route }) {
 
   function onDone() {
     console.log("This is done");
-    onComplete();
+    onComplete({ result: 'success', message: 'Purchase completed successfully', data: productData });
     // navigation.navigate("ProductList");
   }
 

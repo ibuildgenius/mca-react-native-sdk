@@ -1,9 +1,40 @@
-import {View, Text, Image, Pressable, SafeAreaView} from 'react-native';
+import {View, Text, Image, Pressable, SafeAreaView, TouchableOpacity, Alert} from 'react-native';
 import {styles} from '../style/styles';
 import {colorPrimary} from '../style/colors';
 import BackButton from '../assets/back.svg';
+import { useApiKeyStore } from "../store/urlApiKeyStore";
 
 export default function MCALayout(props) {
+  let { onClose} = useApiKeyStore();
+
+  function closeSdk() {
+    console.log("This is closed");
+    onClose();
+    // navigation.navigate("ProductList");
+  }
+
+  function showCloseDialog() {
+    Alert.alert(
+      "Quit Process",
+      "You are about to quit this process, do you want to proceed with this action?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("OK Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+
+          onPress: () => {
+            closeSdk();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
   return (
     <SafeAreaView style={{ flex: 1,}}>
     <View style={styles.appContainer}>
@@ -17,6 +48,31 @@ export default function MCALayout(props) {
           </Pressable>
 
           <Image style={styles.logo} source={require('../assets/logo.png')} />
+          
+          <TouchableOpacity
+                onPress={showCloseDialog}
+                style={{ position: 'absolute', right: 0, top: 0, padding: 12 }}
+                // style={styles.closeButtonContainer}
+              >
+                <View
+                  style={[
+                    styles.closeButton,
+                    { backgroundColor: "#8B0000", opacity: 0.2 },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: "red",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    X
+                  </Text>
+                  {/* <Icon name="close" color={RED} size={15} /> */}
+                </View>
+              </TouchableOpacity>
+
         </View>
       )}
 
