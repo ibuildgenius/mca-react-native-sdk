@@ -1,5 +1,8 @@
 import {StyleSheet} from 'react-native';
 
+
+const FILL_RED = '#FF5733';
+
 export const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
@@ -10,6 +13,31 @@ export const styles = StyleSheet.create({
 
   spacerHorizontal: {
     height: '3%',
+  },
+  container: {
+    flexDirection: 'row', // To align items horizontally
+    justifyContent: 'center', // To center items horizontally
+    alignItems: 'center', // To center items vertically
+    paddingHorizontal: 16, // Horizontal padding for the container
+    paddingBottom:10
+  },
+  closeText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  closeButtonContainer: {
+    position: 'absolute', // Absolute positioning for the close button
+    right: 5, // Align the close button to the right
+     justifyContent: 'center', // Center vertically
+  alignItems: 'center', // Center horizontally
+  },
+  closeButton: {
+   width: 36,
+  height: 36,
+  borderRadius: 18, 
+  alignItems: 'center',
+  justifyContent: 'center', // Center vertically
   },
 
   titleText: {

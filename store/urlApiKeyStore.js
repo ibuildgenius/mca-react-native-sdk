@@ -7,9 +7,11 @@ export const useApiKeyStore = create(set => ({
   debitWalletReference: '',
   form: {},
   onComplete: () => console.log('Done'),
+  onClose: () => console.log('Closed'),
   setApiKey: apiKey => set(state => ({apiKey})),
   setForm: form => set(state => ({form})),
   setPaymentOption: paymentOption => set(state => ({paymentOption})),
   setDebitWalletReference: debitWalletReference => set(state => ({debitWalletReference})),
   setOnComplete: onComplete => set({ onComplete }),
+  setonClose: onClose => set({ onClose }),
 }));

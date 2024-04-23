@@ -11,8 +11,10 @@ import {
   BackHandler,
   SafeAreaView,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import { styles } from "../style/styles";
+import { RED, WHITE } from "../style/colors";
 import { useState, useEffect } from "react";
 import { initiatePurchase } from "../api/constants";
 import ProductListItem from "./ProductListItem";
@@ -25,7 +27,7 @@ export default function ProductList({ navigation }) {
   const [filterText, setFilterText] = useState("");
   const [filters, setFilters] = useState([]);
   const [filterOption, setFilterOption] = useState("All");
-  let { apiKey, baseUrl, paymentOption, debitWalletReference } =
+  let { apiKey, baseUrl, onClose, paymentOption, debitWalletReference } =
     useApiKeyStore();
 
   function showFailedDialog(message) {
@@ -47,6 +49,33 @@ export default function ProductList({ navigation }) {
       },
     ]);
   }
+  function closeSdk() {
+    console.log("This is closed");
+    onClose();
+    // navigation.navigate("ProductList");
+  }
+
+  function showCloseDialog() {
+    Alert.alert(
+      "Quit Process",
+      "You are about to quit this process, do you want to proceed with this action?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("OK Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+
+          onPress: () => {
+            closeSdk();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  }
 
   const url = baseUrl + initiatePurchase;
   const headers = {
@@ -56,7 +85,7 @@ export default function ProductList({ navigation }) {
   const jsonBody = JSON.stringify({
     action: "purchase",
     payment_option: paymentOption,
-    debit_wallet_reference:debitWalletReference,
+    debit_wallet_reference: debitWalletReference,
   });
   useEffect(() => {
     if (apiKey) {
@@ -133,7 +162,31 @@ export default function ProductList({ navigation }) {
           <View
             style={{ flex: 1, justifyContent: "flex-start", paddingTop: 0 }}
           >
-            <Text style={styles.titleText}>Product Page</Text>
+            <View style={styles.container}>
+              <Text style={styles.closeText}>Product Page</Text>
+              <TouchableOpacity
+                onPress={showCloseDialog}
+                style={styles.closeButtonContainer}
+              >
+                <View
+                  style={[
+                    styles.closeButton,
+                    { backgroundColor: "#8B0000", opacity: 0.2 },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: "red",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    X
+                  </Text>
+                  {/* <Icon name="close" color={RED} size={15} /> */}
+                </View>
+              </TouchableOpacity>
+            </View>
             <View
               style={{
                 flexDirection: "row",

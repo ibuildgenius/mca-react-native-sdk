@@ -11,16 +11,18 @@ import {AppRegistry} from 'react-native';
 import {name as appName} from './app.json';
 
 export default function McaSDK(props) {
-  let {setApiKey, setOnComplete, setPaymentOption, setDebitWalletReference, setForm} = useApiKeyStore();
+  let {setApiKey, setonClose, setOnComplete, setPaymentOption, setDebitWalletReference, setForm} = useApiKeyStore();
   useEffect(() => {
     // MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c
     setApiKey(props.apiKey ?? 'MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c');
     setApiKey(props.apiKey ?? '');
+    // setApiKey(props.apiKey ?? 'MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c');
     setForm(props.form ?? {});
     setPaymentOption(props.paymentOption ?? 'gateway');
     setDebitWalletReference(props.debitWalletReference ?? "");
     setOnComplete(props.onComplete ?? (() => console.log('Done')));
-  }, []);
+    setonClose(props.onClose ?? (() => console.log('Closed')));
+  }, [props.debitWalletReference]);
 
 
   const Stack = createNativeStackNavigator();
