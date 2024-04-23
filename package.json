@@ -1,6 +1,6 @@
 {
-  "name": "react-native-priv-sdk",
-  "version": "0.3.9",
+  "name": "@mycoverai/mca-react-native-sdk",
+  "version": "0.0.57",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
