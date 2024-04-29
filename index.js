@@ -7,8 +7,7 @@ import PaymentOption from './payment_option/PaymentOption';
 import SuccessScreen from './components/SuccessScreen';
 import {useApiKeyStore} from './store/urlApiKeyStore';
 import {useEffect} from 'react';
-// import {AppRegistry} from 'react-native';
-// import {name as appName} from './app.json';
+// import { registerRootComponent } from 'expo';
 
 export default function McaSDK(props) {
   let {setApiKey, setonClose, setOnComplete, setPaymentOption, setDebitWalletReference, setForm} = useApiKeyStore();

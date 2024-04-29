@@ -52,7 +52,6 @@ export default function ProductList({ navigation }) {
   function closeSdk() {
     console.log("This is closed");
     onClose();
-    // navigation.navigate("ProductList");
   }
 
   function showCloseDialog() {
@@ -171,12 +170,13 @@ export default function ProductList({ navigation }) {
                 <View
                   style={[
                     styles.closeButton,
-                    { backgroundColor: "#8B0000", opacity: 0.2 },
+                    { backgroundColor: "rgba(139, 0, 0, 0.25)", opacity: 1 },
                   ]}
                 >
                   <Text
                     style={{
                       color: "red",
+                      opacity: 0.6,
                       fontWeight: "bold",
                       textAlign: "center",
                     }}
@@ -187,6 +187,11 @@ export default function ProductList({ navigation }) {
                 </View>
               </TouchableOpacity>
             </View>
+            <View style={{
+                paddingVertical: Platform.OS === "ios" ? 6 : 3,
+              }}>
+
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -195,7 +200,7 @@ export default function ProductList({ navigation }) {
                 borderRadius: 25,
                 borderColor: "#D0D5DD",
                 alignItems: "center",
-                paddingVertical: Platform.OS === "ios" ? 11 : 3,
+                paddingVertical: Platform.OS === "ios" ? 12 : 3,
                 paddingHorizontal: 12,
                 backgroundColor: "#ffffff",
               }}
@@ -213,10 +218,20 @@ export default function ProductList({ navigation }) {
                 value={filterText}
               />
             </View>
+            <View style={{
+                paddingVertical:  3,
+              }}>
+
+            </View>
             <View style={{ paddingVertical: 5 }}>
               {ProductFilterOptions(filters, filterOption, (option) => {
                 setFilterOption(option), filterText;
               })}
+            </View>
+            <View style={{
+                paddingVertical:  3,
+              }}>
+
             </View>
             <FlatList
               showsVerticalScrollIndicator={false}

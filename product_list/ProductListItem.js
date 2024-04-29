@@ -15,7 +15,7 @@ export default function ProductListItem(props) {
   function resolveImage() {
     let name = data.name.toLowerCase();
 
-    let size = '30';
+    let size = '35';
 
     if (name.includes('home')) {
       
@@ -53,7 +53,8 @@ export default function ProductListItem(props) {
             style={{
               marginBottom: 8,
               fontFamily: 'metropolis_medium',
-              fontWeight: '600',
+              fontWeight: '700',
+              fontSize:14,
               color: colorNavy,
             }}>
             {data.name}

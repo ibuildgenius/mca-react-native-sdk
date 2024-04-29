@@ -25,9 +25,17 @@ import InfoIcon from "../assets/info.svg";
 
 export default function ProductForm({ navigation, route }) {
   const screenHeight = Dimensions.get("window").height;
-  let { apiKey, baseUrl, onComplete, paymentOption, debitWalletReference, form} =
-    useApiKeyStore();
-  let { hasPaid } = usePaymentStore();
+  let {
+    apiKey,
+    baseUrl,
+    onComplete,
+    paymentOption,
+    debitWalletReference,
+    form,
+  } = useApiKeyStore();
+  let { hasPaid, formError, setFormError } = usePaymentStore();
+  let { setHasPaid } = usePaymentStore();
+
   let productData = route.params.data;
 
   let transactionRef = route.params.transactionRef || "";
@@ -35,29 +43,28 @@ export default function ProductForm({ navigation, route }) {
 
   let [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(form || {});
+  const [purchaseDetails, setPurchaseDetails] = useState({});
+  // const [formError, setFormError] = useState({});
   const [fieldIndex, setFieldIndex] = useState(0);
   const [files, setFiles] = useState([]);
   const [complete, setComplete] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [newTransactionRef, setNewTransactionRef] = useState(transactionRef ?? "");
+  const [newTransactionRef, setNewTransactionRef] = useState(
+    transactionRef ?? ""
+  );
 
   function failedDialog(message) {
     Alert.alert("Transaction Failed", message);
   }
-  // useEffect(() => {
-  //   setNewTransactionRef(transactionRef)
-  // }, []);
 
   useEffect(() => {
-    
-
     const handleBackButton = () => {
       if (fieldIndex > 0) {
         setFieldIndex(fieldIndex - 1);
 
         return true;
       } else {
-          return hasPaid;
+        return hasPaid;
       }
     };
 
@@ -70,17 +77,89 @@ export default function ProductForm({ navigation, route }) {
 
   let formFields = productData["form_fields"]
     .filter((item) => {
-      return (newTransactionRef.trim().length > 1) || (transactionRef.trim().length > 1)
-        ? !item["show_first"] 
+      return newTransactionRef.trim().length > 1 ||
+        transactionRef.trim().length > 1
+        ? !item["show_first"]
         : item["show_first"];
     })
     .sort((a, b) => a.position - b.position);
 
-  function updateData(key, value) {
+  let totalFields = productData["form_fields"].filter((item) => {
+    return newTransactionRef.trim().length > 1 ||
+      transactionRef.trim().length > 1
+      ? !item["show_first"].length
+      : item["show_first"].length;
+  }).length;
+
+  function updateData(key, value, validate = false, minMaxConstraint, min, isDate = false) {
+    if (validate) {
+      if(isDate){
+        validateDate(key, value, minMaxConstraint, min);
+      }
+      else{
+        validateData(key, value, minMaxConstraint, min);
+      }
+      
+    }
     let newMap = formData;
     newMap[key] = value;
     setFormData(newMap);
   }
+
+  function validateData(formName, formValue, minMaxConstraint, min) {
+    if (minMaxConstraint == "value") {
+      if (formValue < min) {
+        let newMap = formError;
+        newMap[formName] = `${formName} cannot be less than ${min}`;
+        setFormError(newMap);
+      } else {
+        const newMap = { ...formError };
+        delete newMap[formName];
+        setFormError(newMap);
+      }
+    } else if (minMaxConstraint == "length") {
+      if (formValue.length < min) {
+        let newMap = formError;
+        newMap[formName] = `${formName} should not be less than ${min}`;
+        setFormError(newMap);
+      } else {
+        const newMap = { ...formError };
+        delete newMap[formName];
+        setFormError(newMap);
+      }
+    }
+  }
+
+  function validateDate(formName, formValue, minMaxConstraint, min) {
+    if (minMaxConstraint == "value") {
+      const yearComparison = compareDateWithToday(formValue);
+      if (yearComparison < min) {
+        let newMap = formError;
+        newMap[formName] = `${formName} requires a minimum of ${min} years`;
+        setFormError(newMap);
+      } else {
+        const newMap = { ...formError };
+        delete newMap[formName];
+        setFormError(newMap);
+      }
+    } 
+  }
+
+  function compareDateWithToday(dateString) {
+    const providedDate = new Date(dateString);
+  
+    // Get today's date
+    const today = new Date();
+  
+    // Extract the year from each date
+    const providedYear = providedDate.getFullYear();
+    const currentYear = today.getFullYear();
+  
+    // Compare the years and get the result
+    const yearComparison = currentYear - providedYear;
+    return yearComparison;
+  }
+
   function initiateWalletPurchase(product, formData) {
     formData.product_id = product.id;
 
@@ -112,26 +191,33 @@ export default function ProductForm({ navigation, route }) {
         }
       })
       .catch((error) => {})
-      .finally(
-        () => {setBusy(false)}
-      );
+      .finally(() => {
+        setBusy(false);
+      });
   }
 
   function progressOrNavigate() {
     if (fieldIndex < chunkedFields().length - 1) {
       setFieldIndex(fieldIndex + 1);
     } else {
-      if (newTransactionRef || transactionRef ) {
+      if (newTransactionRef || transactionRef) {
         completePurchase();
       } else {
         if (paymentOption == "wallet") {
           initiateWalletPurchase(productData, formData);
-          
         } else {
-          setFieldIndex(0);
-          navigation.navigate("PaymentOptionScreen", {
-            data: { product: productData, form: formData },
-          });
+          if (Object.keys(formData).length != formFields.length) {
+            const formErrorString = JSON.stringify(formError);
+            failedDialog("Complete the form to proceed");
+          } else if (Object.keys(formError).length > 0) {
+            const formErrorString = JSON.stringify(formError);
+            failedDialog("Form errors exist:" + formErrorString);
+          } else {
+            setFieldIndex(0);
+            navigation.navigate("PaymentOptionScreen", {
+              data: { product: productData, form: formData },
+            });
+          }
         }
       }
     }
@@ -204,12 +290,40 @@ export default function ProductForm({ navigation, route }) {
 
       let body = JSON.stringify({
         payload: formData,
-        reference: newTransactionRef && newTransactionRef !== '' ? newTransactionRef : transactionRef,
+        reference:
+          newTransactionRef && newTransactionRef !== ""
+            ? newTransactionRef
+            : transactionRef,
       });
+      console.log("formData")
+      console.log("formData")
+      console.log(formData)
       fetch(url, { method: "POST", headers: headers, body })
         .then((response) => response.json())
         .then((json) => {
           if (json["responseCode"] == 1) {
+            const extractedData = {
+              updatedAt: json.data.updated_at,
+              startDate: json.data.start_date,
+              purchaseId: json.data.purchase_id,
+              providerId: json.data.provider_id,
+              activationDate: json.data.activation_date,
+              isActive: json.data.active,
+              buyerId: json.data.buyer_id,
+              createdAt: json.data.created_at,
+              customerId: json.data.customer_id,
+              distributorId: json.data.distributor_id,
+              dob: json.data.dob,
+              email: json.data.email,
+              expirationDate: json.data.expiration_date,
+              firstName: json.data.first_name,
+              geniusPrice: json.data.genius_price,
+              id: json.data.id,
+              lastName: json.data.last_name,
+              marketPrice: json.data.market_price,
+              meta: json.data.meta,
+            };
+            setPurchaseDetails(extractedData);
             setComplete(true);
           } else {
             Alert.alert("Request Failed", json["responseText"]);
@@ -240,7 +354,12 @@ export default function ProductForm({ navigation, route }) {
 
   function onDone() {
     console.log("This is done");
-    onComplete({ result: 'success', message: 'Purchase completed successfully', data: productData });
+    console.log(purchaseDetails);
+    onComplete({
+      result: "success",
+      message: "Purchase completed successfully",
+      data: purchaseDetails,
+    });
     // navigation.navigate("ProductList");
   }
 
@@ -323,14 +442,41 @@ export default function ProductForm({ navigation, route }) {
                   if (dataType == "array") {
                     updateData(element["name"], value);
                   } else if (dataType == "number") {
-                    updateData(element["name"], parseInt(value));
+                    updateData(
+                      element["name"],
+                      parseInt(value),
+                      true,
+                      element["min_max_constraint"],
+                      element["min"]
+                    );
                   } else if (dataType == "boolean") {
                     updateData(
                       element["name"],
                       value.toLowerCase() == "true" ? true : false
                     );
                   } else {
-                    updateData(element["name"], value);
+                    if(element["input_type"].toLowerCase() == "date"){
+                      updateData(
+                        element["name"],
+                        value,
+                        true,
+                        element["min_max_constraint"],
+                        element["min"],
+                        true
+                      );
+
+                    }
+                    else{
+                      updateData(
+                        element["name"],
+                        value,
+                        true,
+                        element["min_max_constraint"],
+                        element["min"]
+                      );
+
+                    }
+                   
                   }
                 }
 
@@ -351,6 +497,7 @@ export default function ProductForm({ navigation, route }) {
                         key={index}
                         onFilePicked={onFilePicked}
                         data={element}
+                        errorString={formError[element["name"]]}
                       />
                     );
                   case "date":
@@ -361,6 +508,7 @@ export default function ProductForm({ navigation, route }) {
                         keyValue={element["label"]}
                         editable={false}
                         data={element}
+                        errorString={formError[element["name"]]}
                       />
                     );
                   default:
@@ -372,6 +520,7 @@ export default function ProductForm({ navigation, route }) {
                         keyValue={element["label"]}
                         editable={true}
                         data={element}
+                        errorString={formError[element["name"]]}
                       />
                     );
                 }
@@ -414,7 +563,6 @@ export default function ProductForm({ navigation, route }) {
               </Text>
             </View>
           ) : null}
-          
         </View>
       </ScrollView>
     );

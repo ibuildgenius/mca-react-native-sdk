@@ -1,13 +1,12 @@
 import {StyleSheet} from 'react-native';
 
 
-const FILL_RED = '#FF5733';
+// const FILL_RED = '#FF5733';
 
 export const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
     paddingHorizontal: 12,
-    // paddingTop:5,
     paddingBottom:5,
   },
 
@@ -15,10 +14,10 @@ export const styles = StyleSheet.create({
     height: '3%',
   },
   container: {
-    flexDirection: 'row', // To align items horizontally
-    justifyContent: 'center', // To center items horizontally
-    alignItems: 'center', // To center items vertically
-    paddingHorizontal: 16, // Horizontal padding for the container
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    paddingHorizontal: 16, 
     paddingBottom:10
   },
   closeText: {
@@ -27,14 +26,14 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   closeButtonContainer: {
-    position: 'absolute', // Absolute positioning for the close button
-    right: 5, // Align the close button to the right
-     justifyContent: 'center', // Center vertically
-  alignItems: 'center', // Center horizontally
+    position: 'absolute', 
+    right: 5, 
+     justifyContent: 'center', 
+  alignItems: 'center', 
   },
   closeButton: {
-   width: 36,
-  height: 36,
+   width: 33,
+  height: 33,
   borderRadius: 18, 
   alignItems: 'center',
   justifyContent: 'center', // Center vertically
@@ -52,13 +51,24 @@ export const styles = StyleSheet.create({
   },
 
   listItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 8,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    margin: 4,
+    margin: 7,
     backgroundColor: '#ffffff',
     borderRadius: 3,
+
+   
+  elevation: 4,
+
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 1,
+  },
+  shadowOpacity: 0.15,
+  shadowRadius: 3.84,
   },
 
   listImage: {

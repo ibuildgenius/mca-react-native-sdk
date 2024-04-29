@@ -8,8 +8,9 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+import {MCAItemPairField} from './MCAItemPairField';
 import {MCATextField} from './MCATextField';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {styles} from '../style/styles';
 import {colorPrimary} from '../style/colors';
 
@@ -21,6 +22,12 @@ export default function ItemPair(props) {
 
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
+
+  useEffect(() => {
+    if (entries.length > 0) {
+      props.onUpdate(entries);
+    }
+  }, [entries]);
 
   function disPlayModal() {
     setShowModal(true);
@@ -41,9 +48,9 @@ export default function ItemPair(props) {
 
     let item = {name: name, amount: newAmount, id: entries.length + 1};
     setEntries(currentEntries => [...currentEntries, item]);
+    dismiss();
     setName('');
     setAmount('');
-    dismiss();
   }
 
   function dismiss() {
@@ -61,7 +68,7 @@ export default function ItemPair(props) {
   return (
     <View>
       <Pressable onPress={disPlayModal}>
-        <MCATextField
+        <MCAItemPairField
           editable={false}
           data={data}
           valueString={

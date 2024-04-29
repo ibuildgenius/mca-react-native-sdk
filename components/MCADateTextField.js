@@ -3,7 +3,7 @@ import {SelectField} from './SelectField';
 import {IOSSelectField } from './IosSelectField';
 import { colorBlack, colorGreyOverlay, RED } from "../style/colors";
 
-export function MCATextField(props) {
+export function MCADateTextField(props) {
   let data = props.data;
 
   function onChange(textString) {
@@ -25,26 +25,25 @@ export function MCATextField(props) {
       <Text style={{marginVertical: 6, fontFamily: 'metropolis_regular',color: colorBlack, marginBottom:7}}>
         {data.label}
       </Text>
-      <View style={{backgroundColor: '#EAECF0', borderRadius: 5}}>
-        <TextInput
-          key={data.id}
-          onChangeText={onChange}
-          // value={props.valueString}
-          defaultValue={props.valueString}
-          editable={props.editable}
-          style={{
-            padding: 6,
-            fontFamily: 'metropolis_regular',
-            color: colorBlack,
-            minHeight:48,
-          }}
-          placeholderTextColor={colorGreyOverlay}
-          placeholder={
-            !props.editable && props.valueString
-              ? props.valueString
-              : data.description
-          }
-        />
+      <View style={{backgroundColor: '#EAECF0', borderRadius: 5, flexDirection: 'row', alignItems: 'center', }}>
+      <View style={{ borderWidth: 1, borderColor: 'blue', borderRadius: 4, padding: 4, marginLeft: 8 ,paddingHorizontal: 10, opacity: 0.7}}>
+    <Text style={{ color: 'blue' }}>Select Date</Text>
+    </View>
+
+  <Text
+    style={{
+      padding: 6,
+      paddingTop:15,
+      fontFamily: 'metropolis_regular',
+      color: '#888888', // Lighter gray color
+        minHeight: 48,
+        
+      flex: 1,
+    }}
+  >
+    
+    {!props.editable && props.valueString ? props.valueString : data.description}
+  </Text>
       </View>
       {
         props.errorString?

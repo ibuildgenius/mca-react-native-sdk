@@ -57,12 +57,13 @@ export default function MCALayout(props) {
                 <View
                   style={[
                     styles.closeButton,
-                    { backgroundColor: "#8B0000", opacity: 0.2 },
+                    { backgroundColor: "rgba(139, 0, 0, 0.25)", opacity: 1 },
                   ]}
                 >
                   <Text
                     style={{
                       color: "red",
+                      opacity: 0.6,
                       fontWeight: "bold",
                       textAlign: "center",
                     }}
