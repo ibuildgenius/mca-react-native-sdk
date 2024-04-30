@@ -57,6 +57,29 @@ export default function ProductForm({ navigation, route }) {
     Alert.alert("Transaction Failed", message);
   }
 
+  function removeCommaIfSeparated(input) {
+    // Check if the input is a string and contains a comma
+    if (typeof input === 'string' && input.includes(',')) {
+      // Remove the comma and return the modified string
+      return input.replace(/,/g, '');
+    } else {
+      // Return the input as is if it's not comma-separated
+      return input;
+    }
+  }
+
+  function formatInput (input) {
+    if (typeof input === 'number' && !isNaN(input)) {
+      // Convert the integer to a string
+      const inputString = input.toString();
+      // Add commas for thousands
+      const formatted = inputString.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return formatted;
+    } else {
+      return input;
+    }
+  };
+
   useEffect(() => {
     const handleBackButton = () => {
       if (fieldIndex > 0) {
@@ -91,15 +114,20 @@ export default function ProductForm({ navigation, route }) {
       : item["show_first"].length;
   }).length;
 
-  function updateData(key, value, validate = false, minMaxConstraint, min, isDate = false) {
+  function updateData(
+    key,
+    value,
+    validate = false,
+    minMaxConstraint,
+    min,
+    isDate = false
+  ) {
     if (validate) {
-      if(isDate){
+      if (isDate) {
         validateDate(key, value, minMaxConstraint, min);
-      }
-      else{
+      } else {
         validateData(key, value, minMaxConstraint, min);
       }
-      
     }
     let newMap = formData;
     newMap[key] = value;
@@ -142,19 +170,19 @@ export default function ProductForm({ navigation, route }) {
         delete newMap[formName];
         setFormError(newMap);
       }
-    } 
+    }
   }
 
   function compareDateWithToday(dateString) {
     const providedDate = new Date(dateString);
-  
+
     // Get today's date
     const today = new Date();
-  
+
     // Extract the year from each date
     const providedYear = providedDate.getFullYear();
     const currentYear = today.getFullYear();
-  
+
     // Compare the years and get the result
     const yearComparison = currentYear - providedYear;
     return yearComparison;
@@ -295,9 +323,9 @@ export default function ProductForm({ navigation, route }) {
             ? newTransactionRef
             : transactionRef,
       });
-      console.log("formData")
-      console.log("formData")
-      console.log(formData)
+      console.log("formData");
+      console.log("formData");
+      console.log(formData);
       fetch(url, { method: "POST", headers: headers, body })
         .then((response) => response.json())
         .then((json) => {
@@ -442,20 +470,23 @@ export default function ProductForm({ navigation, route }) {
                   if (dataType == "array") {
                     updateData(element["name"], value);
                   } else if (dataType == "number") {
-                    updateData(
-                      element["name"],
-                      parseInt(value),
-                      true,
-                      element["min_max_constraint"],
-                      element["min"]
-                    );
+
+                      updateData(
+                        element["name"],
+                        parseInt(removeCommaIfSeparated(value)),
+                        true,
+                        element["min_max_constraint"],
+                        element["min"]
+                      );
+                    
+                  
                   } else if (dataType == "boolean") {
                     updateData(
                       element["name"],
                       value.toLowerCase() == "true" ? true : false
                     );
                   } else {
-                    if(element["input_type"].toLowerCase() == "date"){
+                    if (element["input_type"].toLowerCase() == "date") {
                       updateData(
                         element["name"],
                         value,
@@ -464,9 +495,7 @@ export default function ProductForm({ navigation, route }) {
                         element["min"],
                         true
                       );
-
-                    }
-                    else{
+                    } else {
                       updateData(
                         element["name"],
                         value,
@@ -474,9 +503,7 @@ export default function ProductForm({ navigation, route }) {
                         element["min_max_constraint"],
                         element["min"]
                       );
-
                     }
-                   
                   }
                 }
 
@@ -516,7 +543,23 @@ export default function ProductForm({ navigation, route }) {
                       <MCATextField
                         key={index + element}
                         onDataChange={onDataChange}
-                        valueString={formData[element["name"]]}
+                        valueString={
+                          element["label"]
+                            .toString()
+                            .toLowerCase()
+                            .includes("value") ||
+                          element["label"]
+                            .toString()
+                            .toLowerCase()
+                            .includes("cost") ||
+                          element["label"]
+                            .toString()
+                            .toLowerCase()
+                            .includes("price")
+                            ? 
+                            formatInput(formData[element["name"]])
+                            : formData[element["name"]]
+                        }
                         keyValue={element["label"]}
                         editable={true}
                         data={element}
