@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {View, Pressable} from 'react-native';
-import {MCATextField} from './MCATextField';
+// import {MCATextField} from './MCATextField';
+import {MCADateTextField} from './MCADateTextField';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 export function MDatePicker(props) {
@@ -38,10 +39,11 @@ export function MDatePicker(props) {
   return (
     <>
       <Pressable key={props.keyValue} onPress={openPicker}>
-        <MCATextField
+        <MCADateTextField
           valueString={displayDate}
           data={productData}
           editable={false}
+          errorString={props.errorString}
         />
       </Pressable>
       {renderPicker()}
