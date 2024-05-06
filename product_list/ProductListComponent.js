@@ -27,8 +27,9 @@ export default function ProductList({ navigation }) {
   const [filterText, setFilterText] = useState("");
   const [filters, setFilters] = useState([]);
   const [filterOption, setFilterOption] = useState("All");
-  let { apiKey, baseUrl, onClose, paymentOption, debitWalletReference } =
+  let { apiKey, baseUrl, onClose, paymentOption, debitWalletReference, resetToDefault } =
     useApiKeyStore();
+    
 
   function showFailedDialog(message) {
     Alert.alert("An Error Occured", message, [
@@ -51,6 +52,8 @@ export default function ProductList({ navigation }) {
   }
   function closeSdk() {
     console.log("This is closed");
+    resetToDefault();
+    global.instanceId = undefined;
     onClose();
   }
 
@@ -87,7 +90,7 @@ export default function ProductList({ navigation }) {
     debit_wallet_reference: debitWalletReference,
   });
   useEffect(() => {
-    if (apiKey) {
+    if (apiKey && (paymentOption !== 'wallet' || debitWalletReference))  {
       fetch(url, { method: "POST", headers: headers, body: jsonBody })
         .then((res) => {
           if (res.ok) {
@@ -108,7 +111,7 @@ export default function ProductList({ navigation }) {
         })
         .finally(() => setLoading(false));
     }
-  }, [apiKey]);
+  }, [apiKey, debitWalletReference]);
 
   function getProductList() {
     var p = products;

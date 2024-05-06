@@ -1,3 +1,4 @@
+
 import {
   View,
   Text,
@@ -12,7 +13,7 @@ import {
 import MCALayout from "../components/MCALayout";
 import { useState, useEffect } from "react";
 import SuccessScreen from "../components/SuccessScreen";
-import { colorBlack, colorGreyOverlay } from "../style/colors";
+import { colorBlack, colorGreyOverlay, colorPrimary } from "../style/colors";
 import { useApiKeyStore } from "../store/urlApiKeyStore";
 import { usePaymentStore } from "../store/paymentStore";
 import { currencify } from "../api/constants";
@@ -29,6 +30,7 @@ export default function PaymentOption({ navigation, route }) {
   let [paymentVerified, setPaymentVerified] = useState(false);
   let [bankLists, setBankLists] = useState({});
   let [selectedBankCode, setSelectedBankCode] = useState("");
+  let [selectedBankName, setSelectedBankName] = useState("");
 
   let [showBankLists, setShowBankLists] = useState(false);
   let [message, setMessage] = useState("Sending request...");
@@ -52,10 +54,6 @@ export default function PaymentOption({ navigation, route }) {
         if (json.responseCode == 1) {
           // setShowBankLists(true)
           setBankLists(json);
-          console.log(showBankLists);
-          console.log(bankLists);
-          console.log(json, "THis is the get response ooo");
-          console.log(bankLists.data);
         } else {
           failedDialog(json.responseText);
         }
@@ -78,9 +76,9 @@ export default function PaymentOption({ navigation, route }) {
     setPaymentString("bank transfer");
   };
 
-  const handleBankSelection = (bankCode) => {
+  const handleBankSelection = (bankCode, bankName) => {
     setSelectedBankCode(bankCode);
-    // Perform any other necessary actions after bank selection
+    setSelectedBankName(bankName)
   };
 
   function failedDialog(message) {
@@ -114,17 +112,15 @@ export default function PaymentOption({ navigation, route }) {
     };
 
     let jsonBody = JSON.stringify(payload);
-
     fetch(url, { method: "POST", headers: headers, body: jsonBody })
       .then((response) => response.json())
       .then((json) => {
         if (json.responseCode == 1) {
-          console.log("I have sent the money");
-          console.log(json)
 
           setButtonText("I have sent the money");
           setPaymentDetails(json);
         } else {
+          // console.log(response, "Responseeee")
           failedDialog(json.responseText);
         }
       })
@@ -152,7 +148,6 @@ export default function PaymentOption({ navigation, route }) {
         if (json.responseCode == 1) {
           setPaymentResponse(json.data);
           setHasPaid(true);
-          console.log(hasPaid, "Has PAID");
           setPaymentVerified(true);
         } else {
           Alert.alert("Unable to Verify", json.message);
@@ -176,13 +171,15 @@ export default function PaymentOption({ navigation, route }) {
   function renderLayout() {
     if (paymentDetails.responseCode == 1) {
       let bankDetails = paymentDetails.data;
+     
       return (
-        <View
+        paymentString == "ussd"?  <View
           style={{
             flex: 1,
             marginVertical: 8,
             backgroundColor: "#F9FAFB",
             marginHorizontal: 10,
+            marginBottom:20
           }}
         >
           <View
@@ -192,10 +189,10 @@ export default function PaymentOption({ navigation, route }) {
               style={{
                 fontFamily: "metropolis_regular",
                 marginVertical: 12,
-                color: colorGreyOverlay,
+                color: colorPrimary,
               }}
             >
-              {bankDetails.message}
+              {"Use below USSD Code to make payment"}
             </Text>
             <View
               style={{
@@ -215,7 +212,7 @@ export default function PaymentOption({ navigation, route }) {
                 color: colorBlack,
               }}
             >
-              {bankDetails.bank + "\n" + bankDetails.account_number}
+              {selectedBankName + "\n" + "\n" + "\n" + bankDetails.payment_code}
             </Text>
             <View
               style={{
@@ -228,6 +225,60 @@ export default function PaymentOption({ navigation, route }) {
           </View>
           <View style={{ flex: 3 }} />
         </View>
+
+        :
+        <View
+        style={{
+          flex: 1,
+          marginVertical: 8,
+          backgroundColor: "#F9FAFB",
+          marginHorizontal: 10,
+          marginBottom:20
+        }}
+      >
+        <View
+          style={{ flex: 5, alignItems: "center", justifyContent: "center" }}
+        >
+          <Text
+            style={{
+              fontFamily: "metropolis_regular",
+              marginVertical: 12,
+              color: colorGreyOverlay,
+            }}
+          >
+            {bankDetails.message}
+          </Text>
+          <View
+            style={{
+              width: "80%",
+              marginVertical: 12,
+              borderBottomColor: "#D0D5DD",
+              borderBottomWidth: StyleSheet.hairlineWidth,
+            }}
+          />
+          <Text
+            style={{
+              fontFamily: "metropolis_bold",
+              textAlign: "center",
+              fontSize: 25,
+              fontWeight: "600",
+              marginVertical: 12,
+              color: colorBlack,
+            }}
+          >
+            {bankDetails.bank + "\n" + bankDetails.account_number}
+          </Text>
+          <View
+            style={{
+              width: "80%",
+              marginVertical: 12,
+              borderBottomColor: "#D0D5DD",
+              borderBottomWidth: StyleSheet.hairlineWidth,
+            }}
+          />
+        </View>
+        <View style={{ flex: 3 }} />
+      </View>
       );
     } else if (showBankLists) {
       return (
@@ -258,7 +309,7 @@ export default function PaymentOption({ navigation, route }) {
             // vv
             <TouchableOpacity
               key={index}
-              onPress={() => handleBankSelection(item.type)}
+              onPress={() => handleBankSelection(item.type, item.bank_name)}
             >
               <View
                 key={index}
@@ -273,28 +324,6 @@ export default function PaymentOption({ navigation, route }) {
               </View>
             </TouchableOpacity>
           ))}
-          {/* <TouchableOpacity onPress={setPaymentDetailsToTransfer}>
-          <View style={{opacity: (paymentString == "bank transfer")?1 : 0.8 }}>
-          <PaymentOptionCard
-            imagePath={require("../assets/transfer.png")}
-            selected={paymentString == "bank transfer"}
-            title="Transfer"
-            sub="Send to bank account"
-          />
-           </View>
-           </TouchableOpacity>
-  
-          <TouchableOpacity onPress={setPaymentDetailsToUssd}>
-          <View style={{opacity: (paymentString == "ussd")?1 : 0.8 }}>
-            <PaymentOptionCard
-              imagePath={require("../assets/ussd.png")}
-              selected={paymentString == "ussd"}
-              title="USSD"
-              sub="Select any bank to generate USSD"
-            />
-          </View>
-  
-          </TouchableOpacity> */}
         </View>
       );
     }
@@ -322,21 +351,7 @@ export default function PaymentOption({ navigation, route }) {
         >
           Choose an option to proceed
         </Text>
-        <PaymentOptionCard
-          imagePath={require("../assets/transfer.png")}
-          selected={paymentString == "bank transfer"}
-          title="Transfer"
-          sub="Send to bank account"
-        />
-        <View style={{ opacity: 0.2 }}>
-          <PaymentOptionCard
-            imagePath={require("../assets/ussd.png")}
-            selected={paymentString == "ussd"}
-            title="USSD"
-            sub="Select any bank to generate USSD"
-          />
-        </View>
-        {/* <TouchableOpacity onPress={setPaymentDetailsToTransfer}>
+        <TouchableOpacity onPress={setPaymentDetailsToTransfer}>
           <View style={{ opacity: paymentString == "bank transfer" ? 1 : 0.8 }}>
             <PaymentOptionCard
               imagePath={require("../assets/transfer.png")}
@@ -356,118 +371,15 @@ export default function PaymentOption({ navigation, route }) {
               sub="Select any bank to generate USSD"
             />
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     );
   }
 
-  // function renderLayout() {
-  //   if (paymentDetails.responseCode == 1) {
-  //     let bankDetails = paymentDetails.data;
-  //     return (
-  //       <View
-  //         style={{
-  //           flex: 1,
-  //           marginVertical: 8,
-  //           backgroundColor: "#F9FAFB",
-  //           marginHorizontal: 10,
-  //         }}
-  //       >
-  //         <View
-  //           style={{ flex: 5, alignItems: "center", justifyContent: "center" }}
-  //         >
-  //           <Text
-  //             style={{
-  //               fontFamily: "metropolis_regular",
-  //               marginVertical: 12,
-  //               color: colorGreyOverlay,
-  //             }}
-  //           >
-  //             {bankDetails.message}
-  //           </Text>
-  //           <View
-  //             style={{
-  //               width: "80%",
-  //               marginVertical: 12,
-  //               borderBottomColor: "#D0D5DD",
-  //               borderBottomWidth: StyleSheet.hairlineWidth,
-  //             }}
-  //           />
-  //           <Text
-  //             style={{
-  //               fontFamily: "metropolis_bold",
-  //               textAlign: "center",
-  //               fontSize: 25,
-  //               fontWeight: "600",
-  //               marginVertical: 12,
-  //               color: colorBlack,
-  //             }}
-  //           >
-  //             {bankDetails.bank + "\n" + bankDetails.account_number}
-  //           </Text>
-  //           <View
-  //             style={{
-  //               width: "80%",
-  //               marginVertical: 12,
-  //               borderBottomColor: "#D0D5DD",
-  //               borderBottomWidth: StyleSheet.hairlineWidth,
-  //             }}
-  //           />
-  //         </View>
-  //         <View style={{ flex: 3 }} />
-  //       </View>
-  //     );
-  //   }
 
-  //   return (
-  //     <View style={{ flex: 1, paddingHorizontal: 15, paddingTop: 5 }}>
-  //       <Text
-  //         style={{
-  //           marginTop: 18,
-  //           fontSize: 18,
-  //           fontFamily: "metropolis_bold",
-  //           color: colorBlack,
-  //         }}
-  //       >
-  //         Select Payment Method
-  //       </Text>
-  //       <Text
-  //         style={{
-  //           color: "#667085",
-  //           marginTop: 2,
-  //           marginBottom: 20,
-  //           fontSize: 13,
-  //           fontFamily: "metropolis_regular",
-  //         }}
-  //       >
-  //         Choose an option to proceed
-  //       </Text>
-  //       <TouchableOpacity onPress={setPaymentDetailsToTransfer}>
-  //       <View style={{opacity: (paymentString == "bank transfer")?1 : 0.8 }}>
-  //       <PaymentOptionCard
-  //         imagePath={require("../assets/transfer.png")}
-  //         selected={paymentString == "bank transfer"}
-  //         title="Transfer"
-  //         sub="Send to bank account"
-  //       />
-  //        </View>
-  //        </TouchableOpacity>
 
-  //       <TouchableOpacity onPress={setPaymentDetailsToUssd}>
-  //       <View style={{opacity: (paymentString == "ussd")?1 : 0.8 }}>
-  //         <PaymentOptionCard
-  //           imagePath={require("../assets/ussd.png")}
-  //           selected={paymentString == "ussd"}
-  //           title="USSD"
-  //           sub="Select any bank to generate USSD"
-  //         />
-  //       </View>
 
-  //       </TouchableOpacity>
 
-  //     </View>
-  //   );
-  // }
 
   function handleButtonBehavior() {
     if (!hasSubmitted) {
@@ -484,12 +396,6 @@ export default function PaymentOption({ navigation, route }) {
       verifyPayment();
     }
   }
-
-  // function nextScreen() {
-  //     if (paymentResponse["responseCode"] == 1) {
-
-  //     }
-  // }
   function onBackPressed() {
     navigation.goBack();
   }
@@ -528,6 +434,23 @@ export default function PaymentOption({ navigation, route }) {
         <View style={{ flex: 1, flexDirection: "column", paddingTop: 10 }}>
           <View style={{ flex: 1 }}>
             <View style={style.bio}>
+            {hasSubmitted ?
+            <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "metropolis_medium",
+                  color: colorBlack,
+                  paddingBottom: 5,
+                  fontWeight: "600",
+                marginVertical: 12,
+                }}
+              >
+                {product.name}
+              </Text> 
+            :
+            <>
+            </>
+            }
               <Text
                 style={{
                   fontSize: 16,
