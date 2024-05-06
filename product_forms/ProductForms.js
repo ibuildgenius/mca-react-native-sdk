@@ -32,6 +32,8 @@ export default function ProductForm({ navigation, route }) {
     paymentOption,
     debitWalletReference,
     form,
+    successMessage,
+    resetToDefault,
   } = useApiKeyStore();
   let { hasPaid, formError, setFormError } = usePaymentStore();
   let { setHasPaid } = usePaymentStore();
@@ -382,7 +384,8 @@ export default function ProductForm({ navigation, route }) {
 
   function onDone() {
     console.log("This is done");
-    console.log(purchaseDetails);
+    resetToDefault();
+    global.instanceId = undefined;
     onComplete({
       result: "success",
       message: "Purchase completed successfully",
@@ -395,7 +398,7 @@ export default function ProductForm({ navigation, route }) {
     return (
       <SuccessScreen
         message={
-          "Your purchase for " + productData["name"] + " was successful."
+          successMessage && successMessage !== '' ? successMessage : "Your purchase for " + productData["name"] + " was successful."
         }
         onDonePressed={onDone}
       />

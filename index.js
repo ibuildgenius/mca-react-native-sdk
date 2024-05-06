@@ -10,7 +10,7 @@ import {useEffect} from 'react';
 // import { registerRootComponent } from 'expo';
 
 export default function McaSDK(props) {
-  let {setApiKey, setonClose, setOnComplete, setPaymentOption, setDebitWalletReference, setForm} = useApiKeyStore();
+  let {setApiKey, setonClose, setOnComplete, setPaymentOption, setDebitWalletReference, setForm, setSuccessMessage} = useApiKeyStore();
   useEffect(() => {
     // MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c
     setApiKey(props.apiKey ?? 'MCAPUBK_TEST|1acf339a-d36f-47e7-8e1b-fd0b76b61b0c');
@@ -20,6 +20,7 @@ export default function McaSDK(props) {
     setDebitWalletReference(props.debitWalletReference ?? "");
     setOnComplete(props.onComplete ?? (() => console.log('Done')));
     setonClose(props.onClose ?? (() => console.log('Closed')));
+    setSuccessMessage(props.successMessage ?? "");
   }, [props.debitWalletReference]);
 
 

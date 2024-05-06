@@ -6,6 +6,7 @@ export const useApiKeyStore = create(set => ({
   paymentOption: 'gateway',
   debitWalletReference: '',
   form: {},
+  successMessage: '',
   onComplete: () => console.log('Done'),
   onClose: () => console.log('Closed'),
   setApiKey: apiKey => set(state => ({apiKey})),
@@ -14,4 +15,14 @@ export const useApiKeyStore = create(set => ({
   setDebitWalletReference: debitWalletReference => set(state => ({debitWalletReference})),
   setOnComplete: onComplete => set({ onComplete }),
   setonClose: onClose => set({ onClose }),
+  setSuccessMessage: successMessage => set(state => ({successMessage})),
+  resetToDefault: () => set({
+    apiKey: '',
+    baseUrl: 'https://api.mycover.ai',
+    paymentOption: 'gateway',
+    debitWalletReference: '',
+    form: {},
+    onComplete: () => console.log('Done'),
+    onClose: () => console.log('Closed'),
+  }),
 }));

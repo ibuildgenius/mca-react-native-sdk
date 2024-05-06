@@ -5,12 +5,13 @@ import BackButton from '../assets/back.svg';
 import { useApiKeyStore } from "../store/urlApiKeyStore";
 
 export default function MCALayout(props) {
-  let { onClose} = useApiKeyStore();
+  let { onClose, resetToDefault} = useApiKeyStore();
 
   function closeSdk() {
     console.log("This is closed");
+    resetToDefault();
+    global.instanceId = undefined;
     onClose();
-    // navigation.navigate("ProductList");
   }
 
   function showCloseDialog() {
