@@ -354,8 +354,6 @@ export default function ProductForm({ navigation, route }) {
               meta: json.data.meta,
               productName: productData.name,
               productDescription: productData.description,
-
-              
             };
             setPurchaseDetails(extractedData);
             setComplete(true);
