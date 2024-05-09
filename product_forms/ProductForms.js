@@ -353,7 +353,7 @@ export default function ProductForm({ navigation, route }) {
               marketPrice: json.data.market_price,
               meta: json.data.meta,
             };
-            setPurchaseDetails(extractedData);
+            setPurchaseDetails(json.data);
             setComplete(true);
           } else {
             Alert.alert("Request Failed", json["responseText"]);
