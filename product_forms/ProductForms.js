@@ -352,8 +352,12 @@ export default function ProductForm({ navigation, route }) {
               lastName: json.data.last_name,
               marketPrice: json.data.market_price,
               meta: json.data.meta,
+              productName: productData.name,
+              productDescription: productData.description,
+
+              
             };
-            setPurchaseDetails(json.data);
+            setPurchaseDetails(extractedData);
             setComplete(true);
           } else {
             Alert.alert("Request Failed", json["responseText"]);
