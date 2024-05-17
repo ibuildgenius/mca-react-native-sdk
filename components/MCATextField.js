@@ -10,7 +10,7 @@ export function MCATextField(props) {
     props.onDataChange(textString);
   }
 
-  if (data.form_field.name.toLowerCase() === 'select') {
+  if (data.form_field && data.form_field.name.toLowerCase() === 'select') {
     // return 
     if (Platform.OS === "ios") {
       return <IOSSelectField key={data.id} onChangeData={onChange} data={data} />;

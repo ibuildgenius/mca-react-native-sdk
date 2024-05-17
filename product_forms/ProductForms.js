@@ -236,10 +236,11 @@ export default function ProductForm({ navigation, route }) {
         if (paymentOption == "wallet") {
           initiateWalletPurchase(productData, formData);
         } else {
-          if (Object.keys(formData).length != formFields.length) {
-            const formErrorString = JSON.stringify(formError);
-            failedDialog("Complete the form to proceed");
-          } else if (Object.keys(formError).length > 0) {
+          // if (Object.keys(formData).length != formFields.length) {
+          //   const formErrorString = JSON.stringify(formError);
+          //   failedDialog("Complete the form to proceed");
+          // } else 
+          if (Object.keys(formError).length > 0) {
             const formErrorString = JSON.stringify(formError);
             failedDialog("Form errors exist:" + formErrorString);
           } else {
