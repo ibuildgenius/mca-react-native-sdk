@@ -36,7 +36,7 @@ export default function ProductListItem(props) {
   }
 
   function navigate() {
-    if ( data["form_fields"]){
+    if (data["form_fields"] && data["form_fields"].length > 0) {
       props.navigator.navigate('ProductInfo', {productData: data});
     }else{
       failedDialog("Product is unavailable at the moment, Please try again");

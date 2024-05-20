@@ -132,7 +132,7 @@ export default function ProductForm({ navigation, route }) {
       }
     }
     let newMap = formData;
-    newMap[key] = value;
+    newMap[key] = key == "image_format"? value.toLowerCase(): value;
     setFormData(newMap);
   }
 

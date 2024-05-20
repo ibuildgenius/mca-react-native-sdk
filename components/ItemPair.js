@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Button,
   Modal,
   Pressable,
@@ -10,20 +11,30 @@ import {
 } from "react-native";
 import { MCAItemPairField } from "./MCAItemPairField";
 import { MCATextField } from "./MCATextField";
+import { MDatePicker } from "./MDatePicker";
+import FilePicker from "./FilePicker";
 import { useState, useEffect } from "react";
 import { styles } from "../style/styles";
-import { colorPrimary } from "../style/colors";
+import { colorPrimary, colorGreyOverlay } from "../style/colors";
+import { useApiKeyStore } from "../store/urlApiKeyStore";
+
 
 export default function ItemPair(props) {
   let data = props.data;
+
+  let {
+    apiKey,
+    baseUrl,
+  } = useApiKeyStore();
 
   const [pairData, setPairData] = useState({});
 
   const [entries, setEntries] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
+  const [busy, setBusy] = useState(false);
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     if (entries.length > 0) {
@@ -64,6 +75,7 @@ export default function ItemPair(props) {
     dismiss();
     setName("");
     setAmount("");
+    setPairData({})
   }
 
   function dismiss() {
@@ -88,8 +100,59 @@ export default function ItemPair(props) {
     // }
     let newMap = pairData;
     newMap[key] = value;
+    newMap["id"] = entries.length + 1;
     setPairData(newMap);
   }
+
+  async function onFilePicked(key, file) {
+    let pair = { key: key, fileDetail: { uri: file.uri, name: file.name } };
+    
+    setFiles((currentFiles) => [...currentFiles, pair]);
+    await uploadFiles(pair);
+
+  }
+
+  async function uploadFiles(pair) {
+    // for (let i = 0; i < files.length; i++) {
+      const formData = new FormData();
+      setBusy(true);
+
+      formData.append("file", {
+        uri: pair.fileDetail.uri,
+        type: "image/png",
+        name: pair.fileDetail.name,
+      });
+
+      let headers = {
+        Authorization: "Bearer " + apiKey,
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      };
+
+      let url = baseUrl + "/v1/upload-file";
+
+      try {
+        let response = await fetch(url, {
+          method: "POST",
+          headers: headers,
+          body: formData,
+        });
+
+        let json = await response.json();
+
+        if (json["responseCode"] == 1) {
+          setBusy(false);
+          updateData(pair.key, json["data"]["file_url"]);
+        }
+        setBusy(false);
+      } catch (error) {
+        setBusy(false);
+        console.log(error);
+      }
+      setBusy(false);
+    // }
+  }
+
 
   return (
     <View>
@@ -156,7 +219,40 @@ export default function ItemPair(props) {
               }
             }
 
-            return <MCATextField onDataChange={onDataChange} data={element} />;
+
+            switch (fieldType) {
+              case "file":
+                return (
+                  <FilePicker
+                    key={index}
+                    onFilePicked={onFilePicked}
+                    data={element}
+                    // errorString={formError[element["name"]]}
+                  />
+                );
+              case "date":
+                return (
+                  <MDatePicker
+                    key={index}
+                    dateValueChanged={onDataChange}
+                    keyValue={element["label"]}
+                    editable={false}
+                    data={element}
+                    // errorString={formError[element["name"]]}
+                  />
+                );
+              default:
+                return (
+                  <MCATextField
+                    key={index + element}
+                    onDataChange={onDataChange}
+                    keyValue={element["label"]}
+                    editable={true}
+                    data={element}
+                    // errorString={formError[element["name"]]}
+                  />
+                );
+            }
           })}
           <View
             style={{
@@ -240,7 +336,44 @@ export default function ItemPair(props) {
                 }}
               />
             </View>
-          ) : (
+          ) : 
+          busy ? (
+            <View
+              style={{
+                zIndex: 2,
+                flex: 1,
+                height: "100%",
+                width: "100%",
+                marginTop: "6%",
+                position: "absolute",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: colorGreyOverlay,
+              }}
+            >
+              <ActivityIndicator
+                style={{ margin: 12, color: "#3BAA90" }}
+                animating={true}
+              />
+              <Text
+                style={{
+                  fontFamily: "metropolis_medium",
+                  margin: 12,
+                  fontSize: 16,
+                  color: "white",
+                }}
+              >
+                {" "}
+                Uploading Image...{" "}
+              </Text>
+            </View>
+          ) : 
+          
+          
+          
+          
+          
+          (
             <View />
           )}
         </View>
