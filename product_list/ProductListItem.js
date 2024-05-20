@@ -1,4 +1,4 @@
-import {View, Text, Pressable, Image} from 'react-native';
+import {View, Text, Pressable, Image, Alert} from 'react-native';
 import {styles} from '../style/styles';
 import {getImage} from '../product_forms/ProductForms';
 import Health from '../assets/health.svg';
@@ -11,6 +11,10 @@ import {currencify} from '../api/constants';
 
 export default function ProductListItem(props) {
   const data = props.data;
+
+  function failedDialog(message) {
+    Alert.alert("Operation Failed", message);
+  }
 
   function resolveImage() {
     let name = data.name.toLowerCase();
@@ -32,7 +36,11 @@ export default function ProductListItem(props) {
   }
 
   function navigate() {
-    props.navigator.navigate('ProductInfo', {productData: data});
+    if (data["form_fields"] && data["form_fields"].length > 0) {
+      props.navigator.navigate('ProductInfo', {productData: data});
+    }else{
+      failedDialog("Product is unavailable at the moment, Please try again");
+    }
   }
 
   function getIcon() {

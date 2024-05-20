@@ -36,16 +36,7 @@ export default function ProductList({ navigation }) {
       {
         text: "OK",
         onPress: () => {
-          // Exit SDK
-          if (Platform.OS === "ios") {
-            // Exit iOS app
-            NativeModules.ExitApp.exitApp();
-          } else if (Platform.OS === "android") {
-            // Exit Android app
-            BackHandler.exitApp();
-          } else {
-            // Handle other platforms accordingly
-          }
+        closeSdk()
         },
       },
     ]);
@@ -114,7 +105,8 @@ export default function ProductList({ navigation }) {
   }, [apiKey, debitWalletReference]);
 
   function getProductList() {
-    var p = products;
+    var p = products.filter((item) => (item["form_fields"] && item["form_fields"].length > 0 && 
+    (item["stability_percentage_live_mode"] === undefined || item["stability_percentage_live_mode"] > 50)));
 
     if (filterOption.toLowerCase() != "all") {
       p = products.filter((item) => item.prefix == filterOption);
