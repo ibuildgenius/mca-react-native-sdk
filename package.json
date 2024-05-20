@@ -1,11 +1,12 @@
 {
   "name": "@mycoverai/mca-react-native-sdk",
-  "version": "0.0.61",
+  "version": "0.0.63",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
+    "publish": "npm publish --access public",
     "test": "jest"
   },
   "dependencies": {
