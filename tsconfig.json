@@ -1,0 +1,124 @@
+// {
+//   "compilerOptions": {
+//     "baseUrl": "src",
+//     "rootDir": ".",
+//     "outDir": "dist",
+//     "paths": {
+//       "mca-react-native-sdk": ["./src/index"],
+//       "views/*": ["views/*"]
+//     },
+//     "allowUnreachableCode": false,
+//     "allowUnusedLabels": false,
+//     "esModuleInterop": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "jsx": "react-jsx",
+//     "lib": ["ESNext"],
+//     "module": "ESNext",
+//     "moduleResolution": "Bundler",
+//     "noEmit": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "noImplicitReturns": true,
+//     "noImplicitUseStrict": false,
+//     "noStrictGenericChecks": false,
+//     "noUncheckedIndexedAccess": true,
+//     "noUnusedLocals": true,
+//     "noUnusedParameters": true,
+//     "resolveJsonModule": true,
+//     "skipLibCheck": true,
+//     "strict": true,
+//     "target": "ESNext",
+//     "verbatimModuleSyntax": true,
+//     "allowSyntheticDefaultImports": true
+//   },
+//   "include": ["src/components", "custom.d.ts", "src/**/*", "src/**/*.d.ts"],
+//   "exclude": ["node_modules", "dist"]
+// }
+
+// // {
+// //   "compilerOptions": {
+// //     "outDir": "dist",
+// //     "declaration": true,
+// //     "emitDeclarationOnly": true,
+// //     "module": "ESNext",
+// //     "target": "ES5",
+// //     "jsx": "react",
+// //     "moduleResolution": "node",
+// //     "esModuleInterop": true,
+// //     "skipLibCheck": true
+// //   },
+// //   "include": ["src"]
+// // }
+
+// // "resolveJsonModule": true,
+
+// {
+//   "compilerOptions": {
+//     "target": "es2018",
+//     "module": "esnext",
+//     "lib": ["es2018"],
+//     "jsx": "react-native",
+//     "declaration": true,
+//     "declarationMap": true,
+//     "sourceMap": true,
+//     "outDir": "dist",
+//     "strict": true,
+//     "moduleResolution": "node",
+//     "allowSyntheticDefaultImports": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true,
+//     "forceConsistentCasingInFileNames": true
+//   },
+//   "include": ["src"],
+//   "exclude": ["node_modules", "dist"]
+// }
+
+// {
+//   "compilerOptions": {
+//     "target": "es2018",
+//     "module": "esnext",
+//     "lib": ["es2018"],
+//     "jsx": "react-native",
+//     "declaration": true,
+//     "declarationMap": true,
+//     "sourceMap": true,
+//     "outDir": "dist",
+//     "strict": true,
+//     "moduleResolution": "node",
+//     "allowSyntheticDefaultImports": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "resolveJsonModule": true,
+//     "typeRoots": ["./node_modules/@types", "./src/types"]
+//   },
+//   "include": ["src", "declarations.d.ts"],
+//   "exclude": ["node_modules", "dist"]
+// }
+
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./src/*"]
+    },
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react",
+    "lib": ["esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext"
+  }
+}
