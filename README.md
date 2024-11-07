@@ -82,12 +82,57 @@ npx react-native-asset
 ## Usage
 
 ```js
-import { multiply } from 'mca-react-native-sdk';
+import MyCoverAI from '@mycoverai/mca-react-native-sdk';
 
-// ...
+type SectionProps = PropsWithChildren<{
+  title: string;
+}>;
 
-const result = await multiply(3, 7);
+function App(): React.JSX.Element {
+  const backgroundStyle = {
+    flex: 1,
+  };
+
+  return (
+    <SafeAreaView style={backgroundStyle}>
+      <MyCoverAI
+        apikey="MCAPUBK_TEST|49303c8b-4fb4-4d8b-a4d3-c2f6f6d0fb62"
+        // transactionType="claim"
+      />
+    </SafeAreaView>
+  );
+}
 ```
+## Properties
+
+The MyCoverAIProps type defines the properties you can pass into the SDK for configuration:
+
+1. apikey:
+  - Your API key for authentication. This is required.
+
+2. policyId (optional):
+  - Required only if transactionType is set to claims or inspection.
+
+3. policyNumber (optional):
+  - Required only if transactionType is set to claims.
+
+4. referenceNumber:
+  - Required only if paymentOption is set to wallet.
+
+5. email (optional):
+  - Required only if transactionType is set to claims.
+
+6. transactionType:
+  - Type of transaction. Available options:
+    - continuePurchase: For continuing a purchase transaction
+    - purchase: For a new purchase transaction
+    - inspection: For inspections
+    - claim: For claims
+    - paymentOption:
+
+7. paymentOption:
+  - wallet: Payment via wallet
+  - gateway: Payment via gateway
 
 ## Troubleshooting
 
