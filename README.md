@@ -5,7 +5,7 @@ Official MyCover.ai SDK. Supercharge your product with MyCover AI Insurance offe
 ## Installation
 
 ```sh
-npm install mca-react-native-sdk
+    npm i @mycoverai/mca-react-native-sdk
 ```
 
 ## Additional Setup
