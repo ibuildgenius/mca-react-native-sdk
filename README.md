@@ -107,32 +107,32 @@ function App(): React.JSX.Element {
 
 The MyCoverAIProps type defines the properties you can pass into the SDK for configuration:
 
-1. apikey:
-  - Your API key for authentication. This is required.
+1. **apikey:**
+      - Your API key for authentication. This is required.
 
-2. policyId (optional):
-  - Required only if transactionType is set to claims or inspection.
+2. **policyId (optional):**
+      - Required only if transactionType is set to claims or inspection.
 
-3. policyNumber (optional):
-  - Required only if transactionType is set to claims.
+3. **policyNumber (optional):**
+      - Required only if transactionType is set to claims.
 
-4. referenceNumber:
-  - Required only if paymentOption is set to wallet.
+4. **referenceNumber:**
+      - Required only if paymentOption is set to wallet.
 
-5. email (optional):
-  - Required only if transactionType is set to claims.
+5. **email (optional):**
+      - Required only if transactionType is set to claims.
 
-6. transactionType:
-  - Type of transaction. Available options:
-    - continuePurchase: For continuing a purchase transaction
-    - purchase: For a new purchase transaction
-    - inspection: For inspections
-    - claim: For claims
-    - paymentOption:
+6. **transactionType:**
+      - Type of transaction. Available options:
+          - continuePurchase: For continuing a purchase transaction
+          - purchase: For a new purchase transaction
+          - inspection: For inspections
+          - claim: For claims
+          - paymentOption:
 
-7. paymentOption:
-  - wallet: Payment via wallet
-  - gateway: Payment via gateway
+7. **paymentOption:**
+     - wallet: Payment via wallet
+     - gateway: Payment via gateway
 
 ## Troubleshooting
 
